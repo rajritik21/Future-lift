@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# FutureLift Job Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully functional job portal website with responsive design, built using modern technologies for an optimal user experience.
 
-## Available Scripts
+## Technologies Used
 
-In the project directory, you can run:
+- **Frontend**: React.js, Tailwind CSS
+- **Backend**: Express.js
+- **Database**: MongoDB
+- **Authentication**: JWT (JSON Web Tokens)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Responsive design that works on all devices
+- User authentication and authorization with JWT
+- Different dashboards for job seekers and employers
+- Job search with filtering options
+- Job posting and application system
+- Company profiles
+- Job seeker profiles with resume upload
+- Application tracking system
+- Todo list for job seekers to manage their job search
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v14.x or above)
+- MongoDB (local or Atlas)
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd futurelift-job-portal
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create a `.env` file in the root directory and add the following:
+   ```
+   NODE_ENV=development
+   PORT=5000
+   MONGO_URI=<your-mongodb-uri>
+   JWT_SECRET=<your-jwt-secret>
+   ```
 
-### `npm run eject`
+4. Start the development server:
+   ```
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+futurelift-job-portal/
+├── backend/                 # Backend Express.js server
+│   ├── config/              # Configuration files
+│   ├── controllers/         # Route controllers
+│   ├── middleware/          # Custom middleware
+│   ├── models/              # MongoDB schemas
+│   ├── routes/              # API routes
+│   └── server.js            # Entry point
+├── public/                  # Static files
+├── src/                     # React frontend
+│   ├── components/          # Reusable components
+│   │   ├── auth/            # Authentication components
+│   │   ├── common/          # Common UI components
+│   │   ├── jobs/            # Job-related components
+│   │   └── layout/          # Layout components
+│   ├── pages/               # Page components
+│   ├── context/             # React context (state management)
+│   ├── api/                 # API service functions
+│   ├── assets/              # Static assets
+│   ├── App.js               # Main App component
+│   └── index.js             # React entry point
+├── .env                     # Environment variables
+├── package.json             # Dependencies and scripts
+└── README.md                # Project documentation
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## API Endpoints
 
-## Learn More
+### Authentication
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - User login
+- `GET /api/auth` - Get authenticated user
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Jobs
+- `GET /api/jobs` - Get all jobs
+- `GET /api/jobs/:id` - Get a single job
+- `POST /api/jobs` - Create a job (employers only)
+- `PUT /api/jobs/:id` - Update a job (job owner only)
+- `DELETE /api/jobs/:id` - Delete a job (job owner only)
+- `POST /api/jobs/apply/:id` - Apply for a job (job seekers only)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Profiles
+- `GET /api/profiles/me` - Get current user's profile
+- `POST /api/profiles` - Create/update profile
+- `GET /api/profiles` - Get all profiles
+- `GET /api/profiles/user/:user_id` - Get profile by user ID
 
-### Code Splitting
+### Companies
+- `POST /api/companies` - Create/update a company (employers only)
+- `GET /api/companies` - Get all companies
+- `GET /api/companies/:id` - Get a company by ID
+- `DELETE /api/companies` - Delete company and user
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## License
 
-### Analyzing the Bundle Size
+This project is licensed under the MIT License.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contributors
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- HIT Students Team
