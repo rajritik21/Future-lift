@@ -197,6 +197,41 @@ const Navbar = ({ isAuthenticated, logout, userType }) => {
                 <span className="relative z-10">Companies</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
               </Link>
+
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('resources')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Resources</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'resources' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/resume-tips"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Resume Tips
+                      </Link>
+                      <Link
+                        to="/faq"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        FAQ
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
               
               <Link to="/about" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
                 <span className="relative z-10">About</span>
@@ -334,6 +369,39 @@ const Navbar = ({ isAuthenticated, logout, userType }) => {
           >
             Companies
           </Link>
+
+          <button
+            onClick={() => toggleDropdown('mobile-resources')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Resources</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-resources' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-resources' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/resume-tips"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Resume Tips
+              </Link>
+              <Link
+                to="/faq"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                FAQ
+              </Link>
+            </div>
+          )}
+          
           <Link
             to="/about"
             className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"

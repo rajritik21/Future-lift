@@ -13,6 +13,42 @@ const HomePage = () => {
     { id: 8, name: 'Software Development', icon: 'fas fa-code', jobCount: 105 }
   ]);
 
+  const [subscription, setSubscription] = useState({
+    skills: '',
+    email: ''
+  });
+  
+  const [subscribeSuccess, setSubscribeSuccess] = useState(false);
+
+  const handleSubscriptionChange = (e) => {
+    const { name, value } = e.target;
+    setSubscription(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    
+    // In a real application, you would send this data to your backend API
+    console.log('Subscription data:', subscription);
+    
+    // Show success message
+    setSubscribeSuccess(true);
+    
+    // Reset form
+    setSubscription({
+      skills: '',
+      email: ''
+    });
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => {
+      setSubscribeSuccess(false);
+    }, 5000);
+  };
+
   useEffect(() => {
     // Mock data for demo purposes - in a real app, this would fetch from the API
     // We're not using the featuredJobs state in this component currently
@@ -583,22 +619,80 @@ const HomePage = () => {
 
       {/* CTA Section */}
       <section className="bg-primary-700">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            <span className="block">Ready to find your dream job?</span>
-            <span className="block text-yellow-300">Join FutureLift today.</span>
-          </h2>
-          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-            <div className="inline-flex rounded-md shadow">
-              <Link to="/register" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100">
-                Get Started
-              </Link>
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+          <div className="lg:flex lg:items-center lg:justify-between">
+            <div className="lg:max-w-xl">
+              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                <span className="block">Ready to find your dream job?</span>
+                <span className="block text-yellow-300">Join FutureLift today.</span>
+              </h2>
+              <p className="mt-3 text-lg text-gray-300">
+                Subscribe to get notified when new jobs matching your skills are posted.
+              </p>
             </div>
-            <div className="ml-3 inline-flex rounded-md shadow">
-              <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800">
-                Learn More
-              </Link>
+            <div className="mt-8 lg:mt-0">
+              <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
+                <div className="inline-flex rounded-md shadow">
+                  <Link to="/register" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100">
+                    Get Started
+                  </Link>
+                </div>
+                <div className="inline-flex rounded-md shadow">
+                  <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800">
+                    Learn More
+                  </Link>
+                </div>
+              </div>
             </div>
+          </div>
+          
+          {/* Subscription Form */}
+          <div className="mt-10 border-t border-primary-600 pt-8">
+            <form className="sm:flex" onSubmit={handleSubscribe}>
+              <div className="flex-1">
+                <label htmlFor="skills" className="sr-only">Your skills</label>
+                <input
+                  id="skills"
+                  name="skills"
+                  type="text"
+                  required
+                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md"
+                  placeholder="Enter your skills (e.g. JavaScript, React, UX Design)"
+                  value={subscription.skills}
+                  onChange={handleSubscriptionChange}
+                />
+              </div>
+              <div className="mt-3 sm:mt-0 sm:ml-3">
+                <label htmlFor="email" className="sr-only">Email address</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md"
+                  placeholder="Enter your email"
+                  value={subscription.email}
+                  onChange={handleSubscriptionChange}
+                />
+              </div>
+              <div className="mt-3 sm:mt-0 sm:ml-3">
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400"
+                >
+                  <i className="fas fa-bell mr-2"></i> Subscribe
+                </button>
+              </div>
+            </form>
+            {subscribeSuccess && (
+              <div className="mt-3 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Success! </strong>
+                <span className="block sm:inline">You've been subscribed to job alerts matching your skills.</span>
+              </div>
+            )}
+            <p className="mt-3 text-sm text-gray-300">
+              Get personalized job alerts matching your skills sent directly to your inbox. No spam, ever.
+            </p>
           </div>
         </div>
       </section>

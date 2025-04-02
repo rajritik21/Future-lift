@@ -13,6 +13,9 @@ import AboutPage from './pages/AboutPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Sitemap from './pages/Sitemap';
+import AuthPage from './pages/AuthPage';
+import FAQPage from './pages/FAQPage';
+import ResumeTipsPage from './pages/ResumeTipsPage';
 import Todo from './components/Todo';
 import AdminDashboard from './components/admin/AdminDashboard';
 import AdminLogin from './components/admin/AdminLogin';
@@ -106,6 +109,10 @@ const App = () => {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/sitemap" element={<Sitemap />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/register" element={<AuthPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/resume-tips" element={<ResumeTipsPage />} />
             
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin setAuth={setAuth} />} />
