@@ -1,0 +1,633 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const Navbar = ({ isAuthenticated, logout, userType }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll event to change navbar style
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleDropdown = (dropdown) => {
+    if (activeDropdown === dropdown) {
+      setActiveDropdown(null);
+    } else {
+      setActiveDropdown(dropdown);
+    }
+  };
+
+  const authLinks = (
+    <>
+      {userType === 'employer' && (
+        <Link to="/dashboard" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
+          <span className="relative z-10">Dashboard</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+        </Link>
+      )}
+      {userType === 'jobseeker' && (
+        <Link to="/dashboard" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
+          <span className="relative z-10">My Profile</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+        </Link>
+      )}
+      {userType === 'admin' && (
+        <Link to="/admin/dashboard" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
+          <span className="relative z-10">Admin Dashboard</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+        </Link>
+      )}
+      <button
+        onClick={logout}
+        className="ml-3 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-red-500 to-orange-400 group-hover:from-red-500 group-hover:to-orange-400 text-white focus:ring-4 focus:outline-none focus:ring-red-200"
+      >
+        <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
+          Logout
+        </span>
+      </button>
+    </>
+  );
+
+  const guestLinks = (
+    <>
+      <Link to="/login" className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-primary-500 to-primary-700 group-hover:from-primary-500 group-hover:to-primary-400 text-white focus:ring-4 focus:outline-none focus:ring-primary-200">
+        <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
+          Login
+        </span>
+      </Link>
+      <Link to="/register" className="ml-3 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-yellow-400 to-orange-400 group-hover:from-yellow-400 group-hover:to-orange-500 text-white focus:ring-4 focus:outline-none focus:ring-yellow-200">
+        <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
+          Register
+        </span>
+      </Link>
+      <Link to="/admin/login" className="ml-3 text-white hover:text-yellow-300 px-4 py-2 rounded-md text-sm font-medium border border-white/30 hover:border-yellow-300 transition-all duration-300">
+        Admin
+      </Link>
+    </>
+  );
+
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-primary-800 shadow-lg' : 'bg-primary-700'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <div className="flex-shrink-0 flex items-center">
+              <Link to="/" className="flex items-center">
+                <img className="h-10 w-auto" src="/logo.png" alt="FutureLift" />
+                {/* <span className="ml-2 text-white text-xl font-bold">𝙵𝚞𝚝𝚞𝚛𝚎 <span className="text-yellow-300">Lift</span></span> */}
+              </Link>
+            </div>
+            <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+              <Link to="/" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
+                <span className="relative z-10">Home</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+              </Link>
+              
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('jobs')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Find Jobs</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'jobs' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'jobs' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/jobs/recent"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Recent Jobs
+                      </Link>
+                      <Link
+                        to="/jobs/remote"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Remote Jobs
+                      </Link>
+                      <Link
+                        to="/jobs/featured"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Featured Jobs
+                      </Link>
+                      <Link
+                        to="/jobs/locations"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Jobs by Location
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('internships')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Internships</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'internships' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'internships' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/internships/technical"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Technical
+                      </Link>
+                      <Link
+                        to="/internships/non-technical"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Non-Technical
+                      </Link>
+                      <Link
+                        to="/internships/paid"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Paid Internships
+                      </Link>
+                      <Link
+                        to="/internships/remote"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Remote Internships
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('companies')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Companies</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'companies' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'companies' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/companies/top"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Top Companies
+                      </Link>
+                      <Link
+                        to="/companies/it"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        IT Companies
+                      </Link>
+                      <Link
+                        to="/companies/finance"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Finance Companies
+                      </Link>
+                      <Link
+                        to="/companies/startups"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Startups
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('resources')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Resources</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'resources' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/resume-tips"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Resume Tips
+                      </Link>
+                      <Link
+                        to="/faq"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        FAQ
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('categories')}
+                  className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center"
+                >
+                  <span className="relative z-10">Categories</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                  <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${activeDropdown === 'categories' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {activeDropdown === 'categories' && (
+                  <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+                    <div className="py-1" role="menu" aria-orientation="vertical">
+                      <Link
+                        to="/categories/technology"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Technology
+                      </Link>
+                      <Link
+                        to="/categories/finance"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Finance
+                      </Link>
+                      <Link
+                        to="/categories/marketing"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Marketing
+                      </Link>
+                      <Link
+                        to="/categories/healthcare"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                      >
+                        Healthcare
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="hidden md:flex md:items-center md:ml-6 md:space-x-4">
+              {isAuthenticated ? authLinks : guestLinks}
+            </div>
+            <div className="flex md:hidden items-center">
+              <button
+                onClick={toggleMenu}
+                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-200 focus:outline-none"
+              >
+                <span className="sr-only">Open main menu</span>
+                {isMenuOpen ? (
+                  <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div className={`${isMenuOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden transition-all duration-300 ease-in-out md:hidden`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-primary-800/90 backdrop-blur-sm">
+          <Link
+            to="/"
+            className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Home
+          </Link>
+          <button
+            onClick={() => toggleDropdown('mobile-jobs')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Find Jobs</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-jobs' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-jobs' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/jobs/recent"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Recent Jobs
+              </Link>
+              <Link
+                to="/jobs/remote"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Remote Jobs
+              </Link>
+              <Link
+                to="/jobs/featured"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Featured Jobs
+              </Link>
+              <Link
+                to="/jobs/locations"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Jobs by Location
+              </Link>
+            </div>
+          )}
+          <button
+            onClick={() => toggleDropdown('mobile-internships')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Internships</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-internships' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-internships' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/internships/technical"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Technical
+              </Link>
+              <Link
+                to="/internships/non-technical"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Non-Technical
+              </Link>
+              <Link
+                to="/internships/paid"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Paid Internships
+              </Link>
+              <Link
+                to="/internships/remote"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Remote Internships
+              </Link>
+            </div>
+          )}
+          <button
+            onClick={() => toggleDropdown('mobile-companies')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Companies</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-companies' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-companies' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/companies/top"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Top Companies
+              </Link>
+              <Link
+                to="/companies/it"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                IT Companies
+              </Link>
+              <Link
+                to="/companies/finance"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Finance Companies
+              </Link>
+              <Link
+                to="/companies/startups"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Startups
+              </Link>
+            </div>
+          )}
+          <button
+            onClick={() => toggleDropdown('mobile-resources')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Resources</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-resources' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-resources' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/resume-tips"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Resume Tips
+              </Link>
+              <Link
+                to="/faq"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                FAQ
+              </Link>
+            </div>
+          )}
+          <button
+            onClick={() => toggleDropdown('mobile-categories')}
+            className="text-white hover:bg-primary-600 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center"
+          >
+            <span>Categories</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-categories' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-categories' && (
+            <div className="pl-4 space-y-1 bg-primary-700/50 rounded-md">
+              <Link
+                to="/categories/technology"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Technology
+              </Link>
+              <Link
+                to="/categories/finance"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Finance
+              </Link>
+              <Link
+                to="/categories/marketing"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Marketing
+              </Link>
+              <Link
+                to="/categories/healthcare"
+                className="text-gray-300 hover:bg-primary-600 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Healthcare
+              </Link>
+            </div>
+          )}
+        </div>
+        <div className="pt-4 pb-3 border-t border-primary-800">
+          <div className="px-2 space-y-1">
+            {isAuthenticated ? (
+              <>
+                {userType === 'admin' && (
+                  <Link
+                    to="/admin/dashboard"
+                    className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                <Link
+                  to="/dashboard"
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Register
+                </Link>
+                <Link
+                  to="/admin/login"
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Admin
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar; 

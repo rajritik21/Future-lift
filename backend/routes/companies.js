@@ -7,6 +7,20 @@ const Company = require('../models/Company');
 const User = require('../models/User');
 const Job = require('../models/Job');
 
+// @route   GET api/companies
+// @desc    Get all companies
+// @access  Public
+router.get('/', (req, res) => {
+  res.json({ msg: 'Get all companies endpoint' });
+});
+
+// @route   POST api/companies
+// @desc    Create a company
+// @access  Private
+router.post('/', (req, res) => {
+  res.json({ msg: 'Create company endpoint' });
+});
+
 // @route   POST api/companies
 // @desc    Create or update a company
 // @access  Private (employers only)
@@ -91,19 +105,6 @@ router.post(
     }
   }
 );
-
-// @route   GET api/companies
-// @desc    Get all companies
-// @access  Public
-router.get('/', async (req, res) => {
-  try {
-    const companies = await Company.find().populate('user', ['name', 'email']);
-    res.json(companies);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
 
 // @route   GET api/companies/:id
 // @desc    Get company by ID

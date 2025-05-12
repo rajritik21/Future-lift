@@ -1,0 +1,54 @@
+/* Social Icon Animation Styles */
+.social-circle-icon {
+  display: inline-block;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 50%;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  background: #2c3e50;
+  transition: all 0.3s ease;
+}
+
+.social-circle-icon i {
+  color: #fff;
+  margin: 0;
+  line-height: 50px;
+  text-align: center;
+  transition: all 0.8s ease;
+}
+
+.social-circle-icon:hover i {
+  transform: rotate(360deg);
+  transition: all 0.2s;
+}
+
+/* Specific social media colors */
+.social-circle-icon.facebook:hover {
+  background-color: #3B5998;
+}
+
+.social-circle-icon.twitter:hover {
+  background-color: #33ccff;
+}
+
+.social-circle-icon.google:hover {
+  background-color: #BD3518;
+}
+
+.social-circle-icon.github:hover {
+  background-color: #333;
+}
+
+.social-circle-icon.linkedin:hover {
+  background-color: #0077b5;
+}
+
+/* Social icons container */
+.social-icons-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+} 

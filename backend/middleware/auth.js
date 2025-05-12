@@ -1,4 +1,11 @@
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+// Load env variables
+dotenv.config();
+
+// Get JWT_SECRET from server config or use default
+const JWT_SECRET = process.env.JWT_SECRET || 'futureliftjobportalsecret';
 
 module.exports = function(req, res, next) {
   // Get token from header
@@ -11,7 +18,7 @@ module.exports = function(req, res, next) {
 
   // Verify token
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secrettoken');
+    const decoded = jwt.verify(token, JWT_SECRET);
     
     // Set user from payload
     req.user = decoded.user;

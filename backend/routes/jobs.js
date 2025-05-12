@@ -7,79 +7,18 @@ const Job = require('../models/Job');
 const User = require('../models/User');
 const Company = require('../models/Company');
 
-// @route   POST api/jobs
-// @desc    Create a job
-// @access  Private (employers only)
-router.post(
-  '/',
-  [
-    auth,
-    [
-      check('title', 'Title is required').not().isEmpty(),
-      check('location', 'Location is required').not().isEmpty(),
-      check('description', 'Description is required').not().isEmpty(),
-      check('jobType', 'Job type is required').not().isEmpty(),
-      check('category', 'Category is required').not().isEmpty(),
-      check('experience', 'Experience is required').not().isEmpty(),
-      check('skills', 'Skills are required').not().isEmpty()
-    ]
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      // Check if user is an employer
-      const user = await User.findById(req.user.id).select('-password');
-      if (user.userType !== 'employer') {
-        return res.status(401).json({ msg: 'Not authorized to post jobs' });
-      }
-
-      // Get employer's company
-      const company = await Company.findOne({ user: req.user.id });
-      if (!company) {
-        return res.status(400).json({ msg: 'Please create a company profile first' });
-      }
-
-      // Create new job
-      const newJob = new Job({
-        user: req.user.id,
-        company: company.id,
-        title: req.body.title,
-        location: req.body.location,
-        description: req.body.description,
-        jobType: req.body.jobType,
-        category: req.body.category,
-        experience: req.body.experience,
-        salary: req.body.salary,
-        skills: req.body.skills.split(',').map(skill => skill.trim())
-      });
-
-      const job = await newJob.save();
-      res.json(job);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
-    }
-  }
-);
-
 // @route   GET api/jobs
 // @desc    Get all jobs
 // @access  Public
-router.get('/', async (req, res) => {
-  try {
-    const jobs = await Job.find({ isActive: true })
-      .sort({ date: -1 })
-      .populate('company', ['name', 'logo'])
-      .populate('user', ['name']);
-    res.json(jobs);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
+router.get('/', (req, res) => {
+  res.json({ msg: 'Get all jobs endpoint' });
+});
+
+// @route   POST api/jobs
+// @desc    Create a job
+// @access  Private
+router.post('/', (req, res) => {
+  res.json({ msg: 'Create job endpoint' });
 });
 
 // @route   GET api/jobs/:id
