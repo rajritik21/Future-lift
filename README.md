@@ -8,6 +8,7 @@ A fully functional job portal website with responsive design, built using modern
 - **Backend**: Express.js
 - **Database**: MongoDB
 - **Authentication**: JWT (JSON Web Tokens)
+- **File Storage**: Cloudinary
 
 ## Features
 
@@ -27,6 +28,7 @@ A fully functional job portal website with responsive design, built using modern
 
 - Node.js (v14.x or above)
 - MongoDB (local or Atlas)
+- Cloudinary account (for file uploads)
 
 ### Installation
 
@@ -39,22 +41,55 @@ A fully functional job portal website with responsive design, built using modern
 2. Install dependencies:
    ```
    npm install
+   cd frontend && npm install
    ```
 
 3. Create a `.env` file in the root directory and add the following:
    ```
    NODE_ENV=development
-   PORT=5000
+   PORT=5001
    MONGO_URI=<your-mongodb-uri>
    JWT_SECRET=<your-jwt-secret>
+   CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
+   CLOUDINARY_API_KEY=<your-cloudinary-api-key>
+   CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
    ```
 
 4. Start the development server:
    ```
-   npm start
+   npm run dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+
+### Deploying to GitHub
+
+1. Initialize a Git repository (if not already done):
+   ```
+   git init
+   ```
+
+2. Add all files to staging:
+   ```
+   git add .
+   ```
+
+3. Commit your changes:
+   ```
+   git commit -m "Initial commit"
+   ```
+
+4. Create a new repository on GitHub (https://github.com/new)
+
+5. Link your local repository to GitHub:
+   ```
+   git remote add origin https://github.com/yourusername/futurelift-job-portal.git
+   ```
+
+6. Push your code to GitHub:
+   ```
+   git push -u origin main
+   ```
 
 ## Project Structure
 

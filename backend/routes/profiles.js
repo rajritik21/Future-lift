@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 const profileController = require('../controllers/profileController');
 
 const Profile = require('../models/Profile');
@@ -15,7 +15,7 @@ router.get('/', profileController.getProfiles);
 // @route   GET api/profiles/me
 // @desc    Get current user's profile
 // @access  Private
-router.get('/me', auth, profileController.getCurrentProfile);
+router.get('/me', isAuthenticated, profileController.getCurrentProfile);
 
 // @route   POST api/profiles
 // @desc    Create or update user profile
@@ -23,7 +23,7 @@ router.get('/me', auth, profileController.getCurrentProfile);
 router.post(
   '/',
   [
-    auth,
+    isAuthenticated,
     [
       check('skills', 'Skills are required').not().isEmpty()
     ]
@@ -39,7 +39,7 @@ router.get('/user/:user_id', profileController.getProfileByUserId);
 // @route   DELETE api/profiles
 // @desc    Delete profile, user & applications
 // @access  Private
-router.delete('/', auth, async (req, res) => {
+router.delete('/', isAuthenticated, async (req, res) => {
   try {
     // Todo: Remove user applications from jobs
 
@@ -61,7 +61,7 @@ router.delete('/', auth, async (req, res) => {
 router.put(
   '/experience',
   [
-    auth,
+    isAuthenticated,
     [
       check('title', 'Title is required').not().isEmpty(),
       check('company', 'Company is required').not().isEmpty(),
@@ -74,7 +74,7 @@ router.put(
 // @route   DELETE api/profiles/experience/:exp_id
 // @desc    Delete experience from profile
 // @access  Private
-router.delete('/experience/:exp_id', auth, profileController.deleteExperience);
+router.delete('/experience/:exp_id', isAuthenticated, profileController.deleteExperience);
 
 // @route   PUT api/profiles/education
 // @desc    Add profile education
@@ -82,7 +82,7 @@ router.delete('/experience/:exp_id', auth, profileController.deleteExperience);
 router.put(
   '/education',
   [
-    auth,
+    isAuthenticated,
     [
       check('school', 'School is required').not().isEmpty(),
       check('degree', 'Degree is required').not().isEmpty(),
@@ -96,7 +96,7 @@ router.put(
 // @route   DELETE api/profiles/education/:edu_id
 // @desc    Delete education from profile
 // @access  Private
-router.delete('/education/:edu_id', auth, profileController.deleteEducation);
+router.delete('/education/:edu_id', isAuthenticated, profileController.deleteEducation);
 
 // @route   PUT api/profiles/account
 // @desc    Update user account details
@@ -104,7 +104,7 @@ router.delete('/education/:edu_id', auth, profileController.deleteEducation);
 router.put(
   '/account',
   [
-    auth,
+    isAuthenticated,
     [
       check('name', 'Name is required').not().isEmpty(),
       check('email', 'Please include a valid email').isEmail()
@@ -112,5 +112,10 @@ router.put(
   ],
   profileController.updateAccount
 );
+
+// @route   PUT api/profiles/avatar
+// @desc    Update user avatar
+// @access  Private
+router.put('/avatar', isAuthenticated, profileController.updateAvatar);
 
 module.exports = router; 

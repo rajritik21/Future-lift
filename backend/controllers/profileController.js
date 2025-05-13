@@ -1,13 +1,14 @@
 const { validationResult } = require('express-validator');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const fileUpload = require('../utils/fileUpload');
 
 // @desc    Get current user's profile
 // @route   GET /api/profiles/me
 // @access  Private
 exports.getCurrentProfile = async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email', 'avatar', 'userType']);
+    const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'email', 'avatar', 'userType', 'resume']);
 
     if (!profile) {
       return res.status(404).json({ msg: 'Profile not found for this user' });
@@ -34,7 +35,7 @@ exports.createOrUpdateProfile = async (req, res) => {
     location,
     bio,
     skills,
-    resume,
+    resumeFile,
     linkedin,
     twitter,
     github,
@@ -51,9 +52,35 @@ exports.createOrUpdateProfile = async (req, res) => {
     headline: headline || '',
     location: location || '',
     bio: bio || '',
-    skills: Array.isArray(skills) ? skills : skills.split(',').map(skill => skill.trim()),
-    resume: resume || ''
+    skills: Array.isArray(skills) ? skills : skills.split(',').map(skill => skill.trim())
   };
+
+  // Handle resume upload if provided
+  if (resumeFile) {
+    try {
+      // Get user to update resume
+      const user = await User.findById(req.user.id);
+      
+      // Delete old resume if exists
+      if (user.resume && user.resume.public_id) {
+        await fileUpload.deleteFile(user.resume.public_id);
+      }
+      
+      // Upload new resume
+      const uploadResult = await fileUpload.uploadResume(resumeFile);
+      
+      // Update user's resume field
+      user.resume = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url
+      };
+      
+      await user.save();
+    } catch (uploadError) {
+      console.error("Resume upload error:", uploadError);
+      return res.status(400).json({ errors: [{ msg: 'Error uploading resume' }] });
+    }
+  }
 
   // Build social object
   profileFields.socialMedia = {};
@@ -78,7 +105,7 @@ exports.createOrUpdateProfile = async (req, res) => {
         { user: req.user.id },
         { $set: profileFields },
         { new: true }
-      );
+      ).populate('user', ['name', 'email', 'avatar', 'resume']);
 
       return res.json(profile);
     }
@@ -86,6 +113,9 @@ exports.createOrUpdateProfile = async (req, res) => {
     // Create new profile
     profile = new Profile(profileFields);
     await profile.save();
+    
+    // Return populated profile
+    profile = await Profile.findById(profile._id).populate('user', ['name', 'email', 'avatar', 'resume']);
     res.json(profile);
   } catch (err) {
     console.error(err.message);
@@ -307,6 +337,60 @@ exports.updateAccount = async (req, res) => {
     ).select('-password');
     
     res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Update user avatar
+// @route   PUT /api/profiles/avatar
+// @access  Private
+exports.updateAvatar = async (req, res) => {
+  try {
+    const { avatar } = req.body;
+    
+    if (!avatar) {
+      return res.status(400).json({ errors: [{ msg: 'No avatar image provided' }] });
+    }
+    
+    // Get current user
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    // Delete old avatar if it exists and is not the default
+    if (user.avatar && user.avatar.public_id && !user.avatar.public_id.includes('default_avatar')) {
+      try {
+        await fileUpload.deleteFile(user.avatar.public_id);
+      } catch (deleteError) {
+        console.error("Error deleting old avatar:", deleteError);
+        // Continue even if delete fails
+      }
+    }
+    
+    // Upload new avatar
+    try {
+      const uploadResult = await fileUpload.uploadProfileImage(avatar);
+      
+      // Update user's avatar field
+      user.avatar = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url
+      };
+      
+      await user.save();
+      
+      res.json({
+        success: true,
+        avatar: user.avatar
+      });
+    } catch (uploadError) {
+      console.error("Avatar upload error:", uploadError);
+      return res.status(400).json({ errors: [{ msg: 'Error uploading avatar' }] });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

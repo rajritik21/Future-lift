@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated, authorizeAdmin } = require('../middleware/auth');
 const AdminAccessCode = require('../models/AdminAccessCode');
 const User = require('../models/User');
 
@@ -43,7 +43,7 @@ const checkAdminCodePermission = async (req, res, next) => {
 router.post(
   '/',
   [
-    auth,
+    isAuthenticated,
     checkAdminCodePermission,
     [
       check('code', 'Access code is required').not().isEmpty(),
@@ -105,7 +105,7 @@ router.post(
 // @route   GET api/admin-access-codes
 // @desc    Get all admin access codes
 // @access  Private (super_admin or admin with manageAdminCodes permission)
-router.get('/', auth, checkAdminCodePermission, async (req, res) => {
+router.get('/', isAuthenticated, checkAdminCodePermission, async (req, res) => {
   try {
     const accessCodes = await AdminAccessCode.find()
       .sort({ createdAt: -1 })
@@ -124,7 +124,7 @@ router.get('/', auth, checkAdminCodePermission, async (req, res) => {
 router.put(
   '/:id',
   [
-    auth,
+    isAuthenticated,
     checkAdminCodePermission,
     [
       check('isActive', 'isActive must be a boolean').optional().isBoolean(),
@@ -182,7 +182,7 @@ router.put(
 // @route   DELETE api/admin-access-codes/:id
 // @desc    Delete an admin access code
 // @access  Private (super_admin only)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
     // Super admin check
     const user = await User.findById(req.user.id);
@@ -199,7 +199,7 @@ router.delete('/:id', auth, async (req, res) => {
     }
 
     await accessCode.remove();
-    res.json({ msg: 'Access code removed' });
+    res.json({ msg: 'Access code deleted' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

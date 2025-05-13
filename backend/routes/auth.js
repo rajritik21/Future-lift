@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 const authController = require('../controllers/authController');
 
 // @route   POST api/auth/register
@@ -33,7 +33,7 @@ router.post(
 // @route   GET api/auth
 // @desc    Get authenticated user
 // @access  Private
-router.get('/', auth, authController.getCurrentUser);
+router.get('/', isAuthenticated, authController.getCurrentUser);
 
 // @route   POST api/auth/admin/register
 // @desc    Register an admin user

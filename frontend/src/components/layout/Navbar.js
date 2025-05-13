@@ -89,7 +89,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
           <div
             className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center cursor-pointer"
           >
-            <span className="relative z-10">Admin</span>
+            <span className="relative z-10">Account</span>
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
             <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${hoveredDropdown === 'admin' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -120,19 +120,27 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                 >
                   Manage Users
                 </Link>
+                <button
+                  onClick={logout}
+                  className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-primary-50 hover:text-red-700 transition-colors duration-200"
+                >
+                  Log Out
+                </button>
               </div>
             </div>
           )}
         </div>
       )}
-      <button
-        onClick={logout}
-        className="ml-3 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-red-500 to-orange-400 group-hover:from-red-500 group-hover:to-orange-400 text-white focus:ring-4 focus:outline-none focus:ring-red-200"
-      >
-        <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
-          Logout
-        </span>
-      </button>
+      {userType !== 'admin' && (
+        <button
+          onClick={logout}
+          className="ml-3 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-red-500 to-orange-400 group-hover:from-red-500 group-hover:to-orange-400 text-white focus:ring-4 focus:outline-none focus:ring-red-200"
+        >
+          <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
+            Logout
+          </span>
+        </button>
+      )}
     </>
   );
 

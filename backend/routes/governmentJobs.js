@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated, authorizeAdmin } = require('../middleware/auth');
 const governmentJobController = require('../controllers/governmentJobController');
 
 // @route    POST api/government-jobs
@@ -10,7 +10,8 @@ const governmentJobController = require('../controllers/governmentJobController'
 router.post(
   '/',
   [
-    auth,
+    isAuthenticated,
+    authorizeAdmin('manageJobs'),
     [
       check('title', 'Title is required').not().isEmpty(),
       check('department', 'Department is required').not().isEmpty(),
@@ -39,21 +40,21 @@ router.get('/:id', governmentJobController.getGovernmentJobById);
 // @route    PUT api/government-jobs/:id
 // @desc     Update a government job
 // @access   Private (Admin only)
-router.put('/:id', auth, governmentJobController.updateGovernmentJob);
+router.put('/:id', isAuthenticated, authorizeAdmin('manageJobs'), governmentJobController.updateGovernmentJob);
 
 // @route    DELETE api/government-jobs/:id
 // @desc     Delete a government job
 // @access   Private (Admin only)
-router.delete('/:id', auth, governmentJobController.deleteGovernmentJob);
+router.delete('/:id', isAuthenticated, authorizeAdmin('manageJobs'), governmentJobController.deleteGovernmentJob);
 
 // @route    POST api/government-jobs/:id/apply
 // @desc     Apply for a government job
 // @access   Private
-router.post('/:id/apply', auth, governmentJobController.applyForGovernmentJob);
+router.post('/:id/apply', isAuthenticated, governmentJobController.applyForGovernmentJob);
 
 // @route    PUT api/government-jobs/:id/status/:app_id
 // @desc     Update application status
 // @access   Private (Admin only)
-router.put('/:id/status/:app_id', auth, governmentJobController.updateApplicationStatus);
+router.put('/:id/status/:app_id', isAuthenticated, authorizeAdmin('manageJobs'), governmentJobController.updateApplicationStatus);
 
 module.exports = router; 

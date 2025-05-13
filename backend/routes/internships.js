@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated, authorizeRoles } = require('../middleware/auth');
 const internshipController = require('../controllers/internshipController');
 
 // @route    POST api/internships
@@ -10,7 +10,8 @@ const internshipController = require('../controllers/internshipController');
 router.post(
   '/',
   [
-    auth,
+    isAuthenticated,
+    authorizeRoles('employer', 'admin'),
     [
       check('title', 'Title is required').not().isEmpty(),
       check('description', 'Description is required').not().isEmpty(),
@@ -38,12 +39,12 @@ router.get('/:id', internshipController.getInternshipById);
 // @route    PUT api/internships/:id
 // @desc     Update an internship
 // @access   Private (Employer or Admin)
-router.put('/:id', auth, internshipController.updateInternship);
+router.put('/:id', isAuthenticated, internshipController.updateInternship);
 
 // @route    DELETE api/internships/:id
 // @desc     Delete an internship
 // @access   Private (Employer or Admin)
-router.delete('/:id', auth, internshipController.deleteInternship);
+router.delete('/:id', isAuthenticated, internshipController.deleteInternship);
 
 // @route    POST api/internships/:id/apply
 // @desc     Apply for an internship
@@ -51,7 +52,7 @@ router.delete('/:id', auth, internshipController.deleteInternship);
 router.post(
   '/:id/apply',
   [
-    auth,
+    isAuthenticated,
     [
       check('resume', 'Resume link is required').not().isEmpty()
     ]
@@ -65,7 +66,7 @@ router.post(
 router.put(
   '/:id/status/:app_id',
   [
-    auth,
+    isAuthenticated,
     [
       check('status', 'Status is required').not().isEmpty()
     ]

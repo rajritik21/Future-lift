@@ -1,21 +1,31 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: [true, "Please enter your name"]
   },
   email: {
     type: String,
     required: true,
+    validate: [validator.isEmail, "Please enter a valid email address"],
     unique: true
   },
   password: {
     type: String,
-    required: true
+    required: [true, "Please enter a password"],
+    minlength: [6, "Password should be at least 6 characters"]
   },
   avatar: {
-    type: String
+    public_id: {
+      type: String,
+      required: false
+    },
+    url: {
+      type: String,
+      required: false
+    },
   },
   dob: {
     type: Date,
@@ -42,10 +52,42 @@ const UserSchema = new mongoose.Schema({
     manageSettings: { type: Boolean, default: false },
     viewAnalytics: { type: Boolean, default: false }
   },
-  date: {
+  role: {
+    type: String,
+    enum: ["job-seeker", "employer", "admin"],
+    default: "job-seeker"
+  },
+  skills: [
+    {
+      type: String
+    }
+  ],
+  resume: {
+    public_id: {
+      type: String,
+      required: false
+    },
+    url: {
+      type: String,
+      required: false
+    },
+  },
+  savedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job'
+    }
+  ],
+  appliedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Application'
+    }
+  ],
+  createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = mongoose.model('user', UserSchema); 
+module.exports = mongoose.model('User', UserSchema); 

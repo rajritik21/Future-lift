@@ -1,0 +1,16 @@
+# Backend API URL
+REACT_APP_API_URL=http://localhost:5001/api
+
+# Cloudinary Configuration for Frontend
+REACT_APP_CLOUDINARY_CLOUD_NAME=dlpgsnezh
+REACT_APP_CLOUDINARY_UPLOAD_PRESET=ml_default
+
+# Public URL - Only required for production build
+# PUBLIC_URL=https://your-production-domain.com
+
+# Development server port (optional, default is 3000)
+PORT=3000
+
+# Other app configuration
+REACT_APP_APP_NAME=FutureLift Job Portal
+REACT_APP_FOOTER_TEXT=© 2024 FutureLift Job Portal. All rights reserved. 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 
 const Company = require('../models/Company');
 const User = require('../models/User');
@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
 router.post(
   '/',
   [
-    auth,
+    isAuthenticated,
     [
       check('name', 'Company name is required').not().isEmpty(),
       check('industry', 'Industry is required').not().isEmpty(),
@@ -151,7 +151,7 @@ router.get('/user/:user_id', async (req, res) => {
 // @route   DELETE api/companies
 // @desc    Delete company, jobs & user
 // @access  Private
-router.delete('/', auth, async (req, res) => {
+router.delete('/', isAuthenticated, async (req, res) => {
   try {
     // Remove company's jobs
     await Job.deleteMany({ user: req.user.id });

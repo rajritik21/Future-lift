@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 
 const Job = require('../models/Job');
 const User = require('../models/User');
@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 // @route   PUT api/jobs/:id
 // @desc    Update a job
 // @access  Private (job owner only)
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', isAuthenticated, async (req, res) => {
   try {
     let job = await Job.findById(req.params.id);
 
@@ -94,7 +94,7 @@ router.put('/:id', auth, async (req, res) => {
 // @route   DELETE api/jobs/:id
 // @desc    Delete a job
 // @access  Private (job owner only)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
 
@@ -121,7 +121,7 @@ router.delete('/:id', auth, async (req, res) => {
 // @route   POST api/jobs/apply/:id
 // @desc    Apply for a job
 // @access  Private (job seekers only)
-router.post('/apply/:id', auth, async (req, res) => {
+router.post('/apply/:id', isAuthenticated, async (req, res) => {
   try {
     // Check if user is a jobseeker
     const user = await User.findById(req.user.id).select('-password');
@@ -162,7 +162,7 @@ router.post('/apply/:id', auth, async (req, res) => {
 // @route   GET api/jobs/employer/myjobs
 // @desc    Get all jobs by employer
 // @access  Private (employers only)
-router.get('/employer/myjobs', auth, async (req, res) => {
+router.get('/employer/myjobs', isAuthenticated, async (req, res) => {
   try {
     // Check if user is an employer
     const user = await User.findById(req.user.id).select('-password');
@@ -183,7 +183,7 @@ router.get('/employer/myjobs', auth, async (req, res) => {
 // @route   GET api/jobs/applications/:job_id
 // @desc    Get all applications for a job
 // @access  Private (job owner only)
-router.get('/applications/:job_id', auth, async (req, res) => {
+router.get('/applications/:job_id', isAuthenticated, async (req, res) => {
   try {
     const job = await Job.findById(req.params.job_id);
 
@@ -215,7 +215,7 @@ router.get('/applications/:job_id', auth, async (req, res) => {
 // @route   PUT api/jobs/applications/:job_id/:app_id
 // @desc    Update application status
 // @access  Private (job owner only)
-router.put('/applications/:job_id/:app_id', auth, async (req, res) => {
+router.put('/applications/:job_id/:app_id', isAuthenticated, async (req, res) => {
   try {
     const job = await Job.findById(req.params.job_id);
 

@@ -1,3 +1,14 @@
+/**
+ * DEPRECATED: This server file is no longer needed. 
+ * Use the main backend server at ./backend/server.js instead.
+ * 
+ * Run with: npm start OR npm run server
+ */
+
+// Original code is preserved for reference but not used.
+// If needed in the future, uncomment the code below.
+
+/*
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -20,9 +31,9 @@ const authRoutes = require('./backend/routes/auth');
 // Use routes
 app.use('/api/auth', authRoutes);
 
-// Define port - use PORT env variable or default to 5000
-// Check alternative port if 5000 is in use
-const PORT = process.env.PORT || 5000;
+// Define port - use PORT env variable or default to 5002
+// Check alternative port if 5002 is in use
+const PORT = process.env.ROOT_PORT || 5002;
 
 // MongoDB connection configuration
 const LOCAL_MONGODB_URI = process.env.LOCAL_MONGODB_URI || 'mongodb://localhost:27017/futurelift';
@@ -167,28 +178,41 @@ if (process.env.NODE_ENV === 'production') {
 
 // Start server with better error handling
 const startServer = async () => {
-  // Try with the default port first
-  try {
-    await app.listen(PORT);
-    console.log(`Server running on port ${PORT}`);
-  } catch (err) {
-    if (err.code === 'EADDRINUSE') {
-      // If the port is in use, try an alternative port (PORT + 1)
-      const altPort = parseInt(PORT) + 1;
-      console.log(`Port ${PORT} is in use, trying alternative port ${altPort}...`);
+  let currentPort = PORT;
+  let serverStarted = false;
+  let attempts = 0;
+  const maxAttempts = 5;
+
+  while (!serverStarted && attempts < maxAttempts) {
+    try {
+      await app.listen(currentPort);
+      console.log(`Server running on port ${currentPort}`);
       
-      try {
-        await app.listen(altPort);
-        console.log(`Server running on alternative port ${altPort}`);
-      } catch (altErr) {
-        console.error(`Failed to start server on alternative port: ${altErr.message}`);
+      // Create a .env.port file to store the actual port being used
+      const fs = require('fs');
+      fs.writeFileSync('.env.port', `PORT=${currentPort}`);
+      console.log(`Port information saved to .env.port file`);
+      
+      serverStarted = true;
+    } catch (err) {
+      if (err.code === 'EADDRINUSE') {
+        attempts++;
+        currentPort = parseInt(currentPort) + 1;
+        console.log(`Port ${currentPort - 1} is in use, trying alternative port ${currentPort}...`);
+      } else {
+        console.error(`Failed to start server: ${err.message}`);
         process.exit(1);
       }
-    } else {
-      console.error(`Failed to start server: ${err.message}`);
-      process.exit(1);
     }
+  }
+
+  if (!serverStarted) {
+    console.error(`Failed to find an available port after ${maxAttempts} attempts.`);
+    process.exit(1);
   }
 };
 
-startServer(); 
+startServer();
+*/
+
+console.log('This server file is deprecated. Please use the backend server directly with: npm start'); 

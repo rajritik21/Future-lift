@@ -1,77 +1,97 @@
 const mongoose = require('mongoose');
 
 const JobSchema = new mongoose.Schema({
-  company: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'company'
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user'
-  },
   title: {
     type: String,
-    required: true
-  },
-  location: {
-    type: String,
-    required: true
+    required: [true, "Please enter job title"],
+    trim: true
   },
   description: {
     type: String,
-    required: true
+    required: [true, "Please enter job description"]
+  },
+  companyName: {
+    type: String,
+    required: [true, "Please enter company name"]
+  },
+  companyLogo: {
+    public_id: {
+      type: String,
+      required: true
+    },
+    url: {
+      type: String,
+      required: true
+    }
+  },
+  location: {
+    type: String,
+    required: [true, "Please enter job location"]
+  },
+  salary: {
+    min: {
+      type: Number
+    },
+    max: {
+      type: Number
+    },
+    type: {
+      type: String,
+      enum: ['hourly', 'monthly', 'yearly'],
+      default: 'monthly'
+    },
+    showSalary: {
+      type: Boolean,
+      default: true
+    }
   },
   jobType: {
     type: String,
-    required: true,
-    enum: ['Full-time', 'Part-time', 'Contract', 'Internship', 'Remote']
+    enum: ['full-time', 'part-time', 'contract', 'internship', 'remote'],
+    required: [true, "Please select job type"]
   },
   category: {
     type: String,
-    required: true
+    required: [true, "Please select job category"]
   },
-  experience: {
+  requiredSkills: [{
     type: String,
+    required: [true, "Please add at least one required skill"]
+  }],
+  experienceLevel: {
+    type: String,
+    enum: ['entry', 'intermediate', 'senior', 'executive'],
+    required: [true, "Please select experience level"]
+  },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  salary: {
-    type: String
-  },
-  skills: {
-    type: [String],
-    required: true
-  },
-  applications: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-      },
-      resume: {
-        type: String
-      },
-      coverLetter: {
-        type: String
-      },
-      status: {
-        type: String,
-        default: 'pending',
-        enum: ['pending', 'reviewed', 'rejected', 'shortlisted', 'hired']
-      },
-      date: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ],
-  isActive: {
+  applications: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Application'
+  }],
+  active: {
     type: Boolean,
     default: true
   },
-  date: {
+  applicationDeadline: {
+    type: Date
+  },
+  createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = mongoose.model('job', JobSchema); 
+// Add text index for search functionality
+JobSchema.index({ 
+  title: 'text', 
+  description: 'text', 
+  companyName: 'text',
+  location: 'text',
+  requiredSkills: 'text'
+});
+
+module.exports = mongoose.model('Job', JobSchema); 

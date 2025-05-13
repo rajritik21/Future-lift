@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const User = require('../models/User');
 const AdminAccessCode = require('../models/AdminAccessCode');
 const mongoose = require('mongoose');
+const fileUpload = require('../utils/fileUpload');
 
 // Get JWT_SECRET from server config
 const JWT_SECRET = process.env.JWT_SECRET || 'futureliftjobportalsecret';
@@ -17,7 +18,7 @@ exports.registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, userType } = req.body;
+  const { name, email, password, userType, avatar } = req.body;
 
   try {
     // Check if user already exists
@@ -26,12 +27,32 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
 
+    // Set default avatar - will be updated later in profile section
+    let avatarData = {
+      public_id: 'default_avatar_id',
+      url: 'https://res.cloudinary.com/dlpgsnezh/image/upload/v1715680055/default_avatar_mrjnch.png'
+    };
+
+    if (avatar) {
+      try {
+        const uploadResult = await fileUpload.uploadProfileImage(avatar);
+        avatarData = {
+          public_id: uploadResult.public_id,
+          url: uploadResult.secure_url
+        };
+      } catch (uploadError) {
+        console.error("Avatar upload error:", uploadError);
+        // Continue with default avatar
+      }
+    }
+
     // Create new user
     user = new User({
       name,
       email,
       password,
-      userType: userType || 'jobseeker' // Default to jobseeker if not specified
+      userType: userType || 'jobseeker', // Default to jobseeker if not specified
+      avatar: avatarData
     });
 
     // Hash password
@@ -62,7 +83,8 @@ exports.registerUser = async (req, res) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            userType: user.userType
+            userType: user.userType,
+            avatar: user.avatar.url
           }
         });
       }
@@ -155,7 +177,7 @@ exports.registerAdmin = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, dob, accessCode } = req.body;
+  const { name, email, password, dob, accessCode, avatar } = req.body;
 
   try {
     // Validate admin access code using the new model
@@ -178,6 +200,25 @@ exports.registerAdmin = async (req, res) => {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
 
+    // Set default avatar for admin
+    let avatarData = {
+      public_id: 'default_admin_avatar_id',
+      url: 'https://res.cloudinary.com/dlpgsnezh/image/upload/v1715680055/default_avatar_mrjnch.png'
+    };
+
+    if (avatar) {
+      try {
+        const uploadResult = await fileUpload.uploadProfileImage(avatar);
+        avatarData = {
+          public_id: uploadResult.public_id,
+          url: uploadResult.secure_url
+        };
+      } catch (uploadError) {
+        console.error("Avatar upload error:", uploadError);
+        // Continue with default avatar
+      }
+    }
+
     // Create new admin user with permissions from access code
     user = new User({
       name,
@@ -193,7 +234,8 @@ exports.registerAdmin = async (req, res) => {
         manageAdminCodes: adminAccessCode.permissions.manageAdminCodes,
         manageSettings: adminAccessCode.permissions.manageSettings,
         viewAnalytics: adminAccessCode.permissions.viewAnalytics
-      }
+      },
+      avatar: avatarData
     });
 
     // Hash password
@@ -328,7 +370,7 @@ exports.registerAdminBypass = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, dob } = req.body;
+  const { name, email, password, dob, avatar } = req.body;
   console.log('Received admin registration request:', { name, email, dob });
 
   try {
@@ -349,6 +391,25 @@ exports.registerAdminBypass = async (req, res) => {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
 
+    // Set default avatar for admin
+    let avatarData = {
+      public_id: 'default_admin_avatar_id',
+      url: 'https://res.cloudinary.com/dlpgsnezh/image/upload/v1715680055/default_avatar_mrjnch.png'
+    };
+
+    if (avatar) {
+      try {
+        const uploadResult = await fileUpload.uploadProfileImage(avatar);
+        avatarData = {
+          public_id: uploadResult.public_id,
+          url: uploadResult.secure_url
+        };
+      } catch (uploadError) {
+        console.error("Avatar upload error:", uploadError);
+        // Continue with default avatar
+      }
+    }
+
     // Create new admin user with default permissions
     const user = new User({
       name,
@@ -364,7 +425,8 @@ exports.registerAdminBypass = async (req, res) => {
         manageAdminCodes: true,
         manageSettings: true,
         viewAnalytics: true
-      }
+      },
+      avatar: avatarData
     });
 
     console.log('Created new admin user object:', user);
