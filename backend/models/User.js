@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please enter a password"],
     minlength: [6, "Password should be at least 6 characters"]
   },
+  mobile: {
+    type: String,
+    required: false
+  },
   avatar: {
     public_id: {
       type: String,
@@ -29,9 +33,7 @@ const UserSchema = new mongoose.Schema({
   },
   dob: {
     type: Date,
-    required: function() {
-      return this.userType === 'admin'; // Required only for admin users
-    }
+    required: false
   },
   userType: {
     type: String,

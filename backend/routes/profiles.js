@@ -107,7 +107,9 @@ router.put(
     isAuthenticated,
     [
       check('name', 'Name is required').not().isEmpty(),
-      check('email', 'Please include a valid email').isEmail()
+      check('email', 'Please include a valid email').isEmail(),
+      check('mobile').optional(),
+      check('dob').optional()
     ]
   ],
   profileController.updateAccount

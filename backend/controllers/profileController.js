@@ -315,12 +315,14 @@ exports.deleteEducation = async (req, res) => {
 // @route   PUT /api/profiles/account
 // @access  Private
 exports.updateAccount = async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, mobile, dob } = req.body;
   
   // Build user object
   const userFields = {};
   if (name) userFields.name = name;
   if (email) userFields.email = email;
+  if (mobile) userFields.mobile = mobile;
+  if (dob) userFields.dob = dob;
   
   try {
     let user = await User.findById(req.user.id);

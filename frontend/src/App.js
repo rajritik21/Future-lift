@@ -15,7 +15,7 @@ import TermsOfService from './pages/TermsOfService';
 import Sitemap from './pages/Sitemap';
 import { Login, Register } from './components/auth';
 import AuthPage from './pages/AuthPage';
-import ProfilePage from './pages/ProfilePage';
+import DashboardPage from './pages/DashboardPage';
 import FAQPage from './pages/FAQPage';
 import ResumeTipsPage from './pages/ResumeTipsPage';
 import InterviewTipsPage from './pages/InterviewTipsPage';
@@ -188,20 +188,10 @@ const App = () => {
             
             {/* User Routes */}
             <Route 
-              path="/profile" 
-              element={
-                <PrivateRoute 
-                  element={<ProfilePage />} 
-                  allowedUserTypes={['jobseeker', 'employer', 'admin']} 
-                />
-              } 
-            />
-            
-            <Route 
               path="/dashboard" 
               element={
                 <PrivateRoute 
-                  element={<Todo user={auth.user} />} 
+                  element={<DashboardPage />} 
                   allowedUserTypes={['jobseeker', 'employer', 'admin']} 
                 />
               } 

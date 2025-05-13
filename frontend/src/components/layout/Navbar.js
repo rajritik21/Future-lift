@@ -76,7 +76,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
       )}
       {userType === 'jobseeker' && (
         <Link to="/dashboard" className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300">
-          <span className="relative z-10">My Profile</span>
+          <span className="relative z-10">Dashboard</span>
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
         </Link>
       )}
@@ -132,14 +132,75 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
         </div>
       )}
       {userType !== 'admin' && (
-        <button
-          onClick={logout}
-          className="ml-3 relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-red-500 to-orange-400 group-hover:from-red-500 group-hover:to-orange-400 text-white focus:ring-4 focus:outline-none focus:ring-red-200"
+        <div 
+          className="relative"
+          onMouseEnter={() => handleMouseEnter('user-account')}
+          onMouseLeave={handleMouseLeave}
         >
-          <span className="relative px-4 py-2 transition-all ease-in duration-200 bg-transparent rounded-md group-hover:bg-opacity-0">
-            Logout
-          </span>
-        </button>
+          <div
+            className="relative group px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center cursor-pointer"
+          >
+            <span className="relative z-10">My Account</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+            <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${hoveredDropdown === 'user-account' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          {hoveredDropdown === 'user-account' && (
+            <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+              <div className="py-1" role="menu" aria-orientation="vertical">
+                <Link
+                  to="/dashboard"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                >
+                  Dashboard
+                </Link>
+                {userType === 'jobseeker' && (
+                  <>
+                    <Link
+                      to="/jobs/applications"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                    >
+                      My Applications
+                    </Link>
+                    <Link
+                      to="/jobs/saved"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                    >
+                      Saved Jobs
+                    </Link>
+                  </>
+                )}
+                {userType === 'employer' && (
+                  <>
+                    <Link
+                      to="/employer/jobs"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                    >
+                      My Job Postings
+                    </Link>
+                    <Link
+                      to="/employer/applications"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                    >
+                      Received Applications
+                    </Link>
+                  </>
+                )}
+                <button
+                  onClick={logout}
+                  className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-primary-50 hover:text-red-700 transition-colors duration-200"
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </>
   );
@@ -336,7 +397,8 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
               </div>
               
               <div 
-                className="relative"nsit             onMouseEnter={() => handleMouseEnter('companies')}
+                className="relative"
+                onMouseEnter={() => handleMouseEnter('companies')}
                 onMouseLeave={handleMouseLeave}
               >
                 <div
@@ -935,19 +997,59 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                     </Link>
                   </>
                 )}
-                <Link
-                  to="/dashboard"
-                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
+                {userType !== 'admin' && (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    {userType === 'jobseeker' && (
+                      <>
+                        <Link
+                          to="/jobs/applications"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          My Applications
+                        </Link>
+                        <Link
+                          to="/jobs/saved"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Saved Jobs
+                        </Link>
+                      </>
+                    )}
+                    {userType === 'employer' && (
+                      <>
+                        <Link
+                          to="/employer/jobs"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          My Job Postings
+                        </Link>
+                        <Link
+                          to="/employer/applications"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Received Applications
+                        </Link>
+                      </>
+                    )}
+                  </>
+                )}
                 <button
                   onClick={() => {
                     logout();
                     setIsMenuOpen(false);
                   }}
-                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left text-red-300"
                 >
                   Logout
                 </button>

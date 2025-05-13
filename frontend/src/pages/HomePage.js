@@ -627,6 +627,105 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* User Testimonials */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold sm:text-4xl">What Our Users Say</h2>
+            <p className="mt-4 max-w-2xl text-xl text-gray-300 mx-auto">
+              Discover how FutureLift has helped professionals find their dream careers
+            </p>
+          </div>
+          
+          <div className="mt-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Testimonial 1 */}
+              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
+                <div className="flex items-center mb-6">
+                  <img 
+                    src="https://randomuser.me/api/portraits/men/32.jpg" 
+                    alt="John Doe" 
+                    className="h-14 w-14 rounded-full object-cover"
+                  />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold">John Doe</h3>
+                    <p className="text-gray-400">Software Engineer, TechCorp</p>
+                  </div>
+                </div>
+                <p className="text-gray-300">
+                  "FutureLift helped me find my dream job quickly and easily. The platform is user-friendly and has a great selection of job listings."
+                </p>
+                <div className="mt-4 flex text-yellow-400">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                </div>
+              </div>
+              
+              {/* Testimonial 2 */}
+              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
+                <div className="flex items-center mb-6">
+                  <img 
+                    src="https://randomuser.me/api/portraits/women/44.jpg" 
+                    alt="Jane Smith" 
+                    className="h-14 w-14 rounded-full object-cover"
+                  />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold">Jane Smith</h3>
+                    <p className="text-gray-400">Product Manager, InnovateX</p>
+                  </div>
+                </div>
+                <p className="text-gray-300">
+                  "I love how FutureLift connects job seekers with top companies. It made my job search stress-free and successful!"
+                </p>
+                <div className="mt-4 flex text-yellow-400">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                </div>
+              </div>
+              
+              {/* Testimonial 3 */}
+              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
+                <div className="flex items-center mb-6">
+                  <img 
+                    src="https://randomuser.me/api/portraits/men/67.jpg" 
+                    alt="Michael Johnson" 
+                    className="h-14 w-14 rounded-full object-cover"
+                  />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold">Michael Johnson</h3>
+                    <p className="text-gray-400">Data Analyst, TechNet</p>
+                  </div>
+                </div>
+                <p className="text-gray-300">
+                  "FutureLift provided me with valuable insights into job trends and opportunities in my field. Highly recommend!"
+                </p>
+                <div className="mt-4 flex text-yellow-400">
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                  <i className="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-10 flex justify-center">
+              <div className="flex space-x-3">
+                <button className="w-3 h-3 rounded-full bg-gray-600 focus:outline-none"></button>
+                <button className="w-3 h-3 rounded-full bg-primary-500 focus:outline-none"></button>
+                <button className="w-3 h-3 rounded-full bg-gray-600 focus:outline-none"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-primary-700">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
