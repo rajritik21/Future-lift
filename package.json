@@ -5,8 +5,8 @@
   "main": "backend/server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "client": "npm start --prefix frontend",
+    "server": "cross-env PORT=5003 nodemon backend/server.js",
+    "client": "cross-env PORT=3001 npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd frontend && npm run build",
     "install-client": "cd frontend && npm install",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9"
   }
 }
