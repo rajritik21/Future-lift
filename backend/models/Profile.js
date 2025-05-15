@@ -75,6 +75,27 @@ const ProfileSchema = new mongoose.Schema({
       },
       description: {
         type: String
+      },
+      marks: {
+        type: String
+      },
+      totalMarks: {
+        type: String
+      },
+      percentage: {
+        type: String
+      },
+      cgpa: {
+        type: String
+      },
+      maxCgpa: {
+        type: String,
+        default: "10.0"
+      },
+      gradingSystem: {
+        type: String,
+        enum: ['percentage', 'cgpa'],
+        default: 'percentage'
       }
     }
   ],
@@ -85,7 +106,19 @@ const ProfileSchema = new mongoose.Schema({
     website: String
   },
   resume: {
-    type: String
+    public_id: {
+      type: String
+    },
+    url: {
+      type: String
+    },
+    filename: {
+      type: String
+    },
+    uploadDate: {
+      type: Date,
+      default: Date.now
+    }
   },
   jobPreferences: {
     jobTypes: {

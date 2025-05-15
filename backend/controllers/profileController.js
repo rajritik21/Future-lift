@@ -317,18 +317,43 @@ exports.deleteEducation = async (req, res) => {
 exports.updateAccount = async (req, res) => {
   const { name, email, mobile, dob } = req.body;
   
+  console.log('Received update account request:', { name, email, mobile, dob });
+  
   // Build user object
   const userFields = {};
   if (name) userFields.name = name;
   if (email) userFields.email = email;
   if (mobile) userFields.mobile = mobile;
-  if (dob) userFields.dob = dob;
+  
+  // Format date of birth if provided
+  if (dob) {
+    // Ensure dob is stored as a proper Date object
+    try {
+      const dobDate = new Date(dob);
+      if (isNaN(dobDate.getTime())) {
+        return res.status(400).json({ msg: 'Invalid date format for date of birth' });
+      }
+      userFields.dob = dobDate;
+      console.log('Formatted DOB:', dobDate);
+    } catch (err) {
+      console.error('Error formatting date:', err);
+      return res.status(400).json({ msg: 'Invalid date format for date of birth' });
+    }
+  }
   
   try {
     let user = await User.findById(req.user.id);
     
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    // Check if the email is already in use by another user
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ msg: 'Email is already in use by another account' });
+      }
     }
     
     // Update user
@@ -338,9 +363,17 @@ exports.updateAccount = async (req, res) => {
       { new: true }
     ).select('-password');
     
+    console.log('Updated user:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      dob: user.dob
+    });
+    
     res.json(user);
   } catch (err) {
-    console.error(err.message);
+    console.error('Error updating user:', err);
     res.status(500).send('Server Error');
   }
 };
@@ -395,6 +428,109 @@ exports.updateAvatar = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Upload or update resume
+// @route   POST /api/profiles/resume
+// @access  Private
+exports.uploadResume = async (req, res) => {
+  try {
+    if (!req.files || !req.files.resume) {
+      return res.status(400).json({ msg: 'No resume file uploaded' });
+    }
+
+    const resumeFile = req.files.resume;
+    
+    // Validate file type
+    const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedFileTypes.includes(resumeFile.mimetype)) {
+      return res.status(400).json({ msg: 'Invalid file type. Only PDF, DOC, and DOCX files are allowed' });
+    }
+    
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (resumeFile.size > maxSize) {
+      return res.status(400).json({ msg: 'File size too large. Maximum size is 5MB' });
+    }
+    
+    // Get user
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    // Delete old resume if exists
+    if (user.resume && user.resume.public_id) {
+      try {
+        await fileUpload.deleteFile(user.resume.public_id);
+      } catch (err) {
+        console.error('Error deleting old resume:', err);
+        // Continue even if delete fails
+      }
+    }
+    
+    // Upload new resume
+    const uploadResult = await fileUpload.uploadResume(resumeFile);
+    
+    // Update user with new resume info
+    user.resume = {
+      public_id: uploadResult.public_id,
+      url: uploadResult.secure_url,
+      filename: resumeFile.name
+    };
+    
+    await user.save();
+    
+    // Also update resume in profile if it exists
+    const profile = await Profile.findOne({ user: req.user.id });
+    if (profile) {
+      profile.resume = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url,
+        filename: resumeFile.name,
+        uploadDate: new Date()
+      };
+      await profile.save();
+    }
+    
+    res.json({
+      success: true,
+      resume: user.resume
+    });
+  } catch (err) {
+    console.error('Error uploading resume:', err);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Get user resume
+// @route   GET /api/profiles/resume
+// @access  Private
+exports.getResume = async (req, res) => {
+  try {
+    // Get user
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    // Check if user has a resume
+    if (!user.resume || !user.resume.url) {
+      return res.status(404).json({ msg: 'No resume found for this user' });
+    }
+    
+    // Return resume URL and details
+    res.json({
+      resume: {
+        url: user.resume.url,
+        filename: user.resume.filename || 'Resume',
+        uploadDate: user.resume.uploadDate || user.updatedAt
+      }
+    });
+  } catch (err) {
+    console.error('Error fetching resume:', err);
     res.status(500).send('Server Error');
   }
 }; 

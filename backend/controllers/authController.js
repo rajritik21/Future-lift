@@ -156,7 +156,7 @@ exports.loginUser = async (req, res) => {
 // @access  Private
 exports.getCurrentUser = async (req, res) => {
   try {
-    // Get user data except password
+    // Get user data except password, include all registration fields
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });

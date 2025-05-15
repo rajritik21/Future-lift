@@ -120,4 +120,14 @@ router.put(
 // @access  Private
 router.put('/avatar', isAuthenticated, profileController.updateAvatar);
 
+// @route   POST api/profiles/resume
+// @desc    Upload or update resume
+// @access  Private
+router.post('/resume', isAuthenticated, profileController.uploadResume);
+
+// @route   GET api/profiles/resume
+// @desc    Get user resume
+// @access  Private
+router.get('/resume', isAuthenticated, profileController.getResume);
+
 module.exports = router; 

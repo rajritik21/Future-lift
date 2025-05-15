@@ -18,7 +18,10 @@ const ResumeSection = ({ user }) => {
     description: '',
     marks: '',
     totalMarks: '',
-    percentage: ''
+    percentage: '',
+    gradingSystem: 'percentage',
+    cgpa: '',
+    maxCgpa: ''
   }]);
   const [skills, setSkills] = useState([{ name: '', level: 'Beginner' }]);
   const [certifications, setCertifications] = useState([{
@@ -103,8 +106,20 @@ const ResumeSection = ({ user }) => {
       [field]: field === 'current' ? !updatedEducation[index].current : value 
     };
     
+    // If changing the grading system, reset the related fields
+    if (field === 'gradingSystem') {
+      if (value === 'percentage') {
+        updatedEducation[index].cgpa = '';
+        updatedEducation[index].maxCgpa = '10.0';
+      } else if (value === 'cgpa') {
+        updatedEducation[index].marks = '';
+        updatedEducation[index].totalMarks = '';
+        updatedEducation[index].percentage = '';
+      }
+    }
+    
     // Calculate percentage when marks or totalMarks change
-    if (field === 'marks' || field === 'totalMarks') {
+    if ((field === 'marks' || field === 'totalMarks') && updatedEducation[index].gradingSystem !== 'cgpa') {
       const marks = field === 'marks' ? value : updatedEducation[index].marks;
       const totalMarks = field === 'totalMarks' ? value : updatedEducation[index].totalMarks;
       
@@ -132,7 +147,10 @@ const ResumeSection = ({ user }) => {
         description: '',
         marks: '',
         totalMarks: '',
-        percentage: ''
+        percentage: '',
+        gradingSystem: 'percentage',
+        cgpa: '',
+        maxCgpa: ''
       }
     ]);
   };
@@ -184,6 +202,64 @@ const ResumeSection = ({ user }) => {
     setCertifications(updatedCertifications);
   };
 
+  const handleResumeUpload = async (e) => {
+    e.preventDefault();
+    if (!resumeFile) {
+      setMessage({ 
+        type: 'error', 
+        text: 'Please select a resume file to upload' 
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setMessage({ 
+          type: 'error', 
+          text: 'Authentication token not found. Please login again.' 
+        });
+        return;
+      }
+      
+      // Create form data for the file upload
+      const formData = new FormData();
+      formData.append('resume', resumeFile);
+      
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-auth-token': token
+        }
+      };
+      
+      // Upload resume
+      const res = await axios.post('/api/profiles/resume', formData, config);
+      
+      if (res.data && res.data.resume) {
+        setResumeUrl(res.data.resume.url);
+        setResumeName(res.data.resume.filename || resumeFile.name);
+        setResumeFile(null);
+        
+        setMessage({ 
+          type: 'success', 
+          text: 'Resume uploaded successfully!' 
+        });
+      }
+      
+    } catch (err) {
+      console.error('Error uploading resume:', err);
+      setMessage({ 
+        type: 'error', 
+        text: err.response?.data?.msg || 'Failed to upload resume' 
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -192,15 +268,19 @@ const ResumeSection = ({ user }) => {
       const token = localStorage.getItem('token');
       
       if (!token) {
+        setMessage({
+          type: 'error',
+          text: 'Authentication token not found. Please login again.'
+        });
         return;
       }
       
-      const formData = new FormData();
-      
-      // Add resume file if selected
+      // If there's a resume file waiting to be uploaded, upload it first
       if (resumeFile) {
-        formData.append('resume', resumeFile);
+        await handleResumeUpload(e);
       }
+      
+      const formData = new FormData();
       
       // Add education, skills, and certifications
       formData.append('education', JSON.stringify(education));
@@ -222,9 +302,6 @@ const ResumeSection = ({ user }) => {
         type: 'success', 
         text: 'Qualifications updated successfully!' 
       });
-      
-      // Reset resume file state after upload
-      setResumeFile(null);
       
       // Clear message after 3 seconds
       setTimeout(() => {
@@ -270,29 +347,40 @@ const ResumeSection = ({ user }) => {
           <div className="flex flex-col md:flex-row md:items-center mb-4">
             <div className="flex-grow">
               {resumeUrl ? (
-                <div className="flex items-center mb-3">
-                  <i className="fas fa-file-pdf text-red-500 text-xl mr-2"></i>
-                  <a 
-                    href={resumeUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-primary-600 hover:text-primary-800 underline"
-                  >
-                    {resumeName || 'View Current Resume'}
-                  </a>
+                <div className="flex items-center mb-3 gap-3">
+                  <i className="fas fa-file-pdf text-red-500 text-xl"></i>
+                  <span className="font-medium">{resumeName || 'Your Resume'}</span>
+                  <div className="flex gap-2 ml-2">
+                    <a 
+                      href={resumeUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="inline-flex items-center px-3 py-1.5 bg-primary-600 text-white text-sm font-medium rounded hover:bg-primary-700"
+                    >
+                      <i className="fas fa-eye mr-1"></i> View
+                    </a>
+                    <label 
+                      htmlFor="resume" 
+                      className="inline-flex items-center px-3 py-1.5 bg-gray-100 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-200 cursor-pointer"
+                    >
+                      <i className="fas fa-sync-alt mr-1"></i> Update
+                    </label>
+                  </div>
                 </div>
               ) : (
                 <p className="text-gray-500 mb-3">No resume uploaded yet</p>
               )}
               
               <div className="relative">
-                <label 
-                  htmlFor="resume" 
-                  className="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none cursor-pointer"
-                >
-                  <i className="fas fa-upload mr-2"></i>
-                  {resumeUrl ? 'Replace Resume' : 'Upload Resume'}
-                </label>
+                {!resumeUrl && (
+                  <label 
+                    htmlFor="resume" 
+                    className="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none cursor-pointer"
+                  >
+                    <i className="fas fa-upload mr-2"></i>
+                    Upload Resume
+                  </label>
+                )}
                 <input 
                   type="file"
                   id="resume"
@@ -376,61 +464,135 @@ const ResumeSection = ({ user }) => {
                 />
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                <div>
-                  <label htmlFor={`marks-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
-                    Marks Obtained
-                  </label>
-                  <input
-                    type="number"
-                    id={`marks-${index}`}
-                    value={edu.marks}
-                    onChange={(e) => handleEducationChange(index, 'marks', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="e.g., 850"
-                    min="0"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor={`totalMarks-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
-                    Total Marks
-                  </label>
-                  <input
-                    type="number"
-                    id={`totalMarks-${index}`}
-                    value={edu.totalMarks}
-                    onChange={(e) => handleEducationChange(index, 'totalMarks', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="e.g., 1000"
-                    min="1"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor={`percentage-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
-                    Percentage
-                  </label>
-                  <div className="relative">
+              {/* Grading System Selection */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Grading System
+                </label>
+                <div className="flex gap-4">
+                  <div className="flex items-center">
                     <input
-                      type="text"
-                      id={`percentage-${index}`}
-                      value={edu.percentage ? `${edu.percentage}%` : ''}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-gray-50"
-                      readOnly
+                      type="radio"
+                      id={`percentage-system-${index}`}
+                      name={`grading-system-${index}`}
+                      checked={!edu.gradingSystem || edu.gradingSystem === 'percentage'}
+                      onChange={() => handleEducationChange(index, 'gradingSystem', 'percentage')}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
                     />
-                    {edu.marks && edu.totalMarks && Number(edu.percentage) > 0 && (
-                      <div 
-                        className="absolute inset-y-0 right-0 w-1/2 bg-primary-100 opacity-40 pointer-events-none rounded-r-md"
-                        style={{ 
-                          width: `${Math.min(100, Number(edu.percentage))}%`,
-                          transition: 'width 0.3s ease' 
-                        }}
-                      ></div>
-                    )}
+                    <label htmlFor={`percentage-system-${index}`} className="ml-2 block text-sm text-gray-700">
+                      Percentage/Marks
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id={`cgpa-system-${index}`}
+                      name={`grading-system-${index}`}
+                      checked={edu.gradingSystem === 'cgpa'}
+                      onChange={() => handleEducationChange(index, 'gradingSystem', 'cgpa')}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                    />
+                    <label htmlFor={`cgpa-system-${index}`} className="ml-2 block text-sm text-gray-700">
+                      CGPA
+                    </label>
                   </div>
                 </div>
               </div>
+              
+              {/* Conditional Rendering Based on Grading System */}
+              {(!edu.gradingSystem || edu.gradingSystem === 'percentage') ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                  <div>
+                    <label htmlFor={`marks-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
+                      Marks Obtained
+                    </label>
+                    <input
+                      type="number"
+                      id={`marks-${index}`}
+                      value={edu.marks}
+                      onChange={(e) => handleEducationChange(index, 'marks', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="e.g., 850"
+                      min="0"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor={`totalMarks-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
+                      Total Marks
+                    </label>
+                    <input
+                      type="number"
+                      id={`totalMarks-${index}`}
+                      value={edu.totalMarks}
+                      onChange={(e) => handleEducationChange(index, 'totalMarks', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="e.g., 1000"
+                      min="1"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor={`percentage-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
+                      Percentage
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id={`percentage-${index}`}
+                        value={edu.percentage ? `${edu.percentage}%` : ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-gray-50"
+                        readOnly
+                      />
+                      {edu.marks && edu.totalMarks && Number(edu.percentage) > 0 && (
+                        <div 
+                          className="absolute inset-y-0 right-0 w-1/2 bg-primary-100 opacity-40 pointer-events-none rounded-r-md"
+                          style={{ 
+                            width: `${Math.min(100, Number(edu.percentage))}%`,
+                            transition: 'width 0.3s ease' 
+                          }}
+                        ></div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  <div>
+                    <label htmlFor={`cgpa-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
+                      CGPA
+                    </label>
+                    <input
+                      type="number"
+                      id={`cgpa-${index}`}
+                      value={edu.cgpa}
+                      onChange={(e) => handleEducationChange(index, 'cgpa', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="e.g., 8.5"
+                      min="0"
+                      step="0.01"
+                      max={edu.maxCgpa || 10}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor={`maxCgpa-${index}`} className="block text-sm font-medium text-gray-700 mb-1">
+                      Maximum CGPA Scale
+                    </label>
+                    <select
+                      id={`maxCgpa-${index}`}
+                      value={edu.maxCgpa || "10.0"}
+                      onChange={(e) => handleEducationChange(index, 'maxCgpa', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    >
+                      <option value="4.0">4.0 Scale</option>
+                      <option value="5.0">5.0 Scale</option>
+                      <option value="10.0">10.0 Scale</option>
+                    </select>
+                  </div>
+                </div>
+              )}
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                 <div>

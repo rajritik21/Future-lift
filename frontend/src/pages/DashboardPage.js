@@ -12,6 +12,7 @@ const DashboardPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('welcome');
+  const [refreshData, setRefreshData] = useState(false);
   const [profileStats, setProfileStats] = useState({
     profileCompletion: 0,
     applications: 0,
@@ -19,6 +20,11 @@ const DashboardPage = () => {
     viewedJobs: 0
   });
   const [isFirstLogin, setIsFirstLogin] = useState(false);
+
+  // Function to trigger data refresh from children components
+  const handleRefreshData = () => {
+    setRefreshData(prev => !prev);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,14 +45,32 @@ const DashboardPage = () => {
         };
         
         // Get user data
-        const userResponse = await axios.get('/api/auth/me', config);
+        const userResponse = await axios.get('/api/auth', config);
         
-        // Combine API data with any stored registration data
+        // Process the user data
         let userData = userResponse.data;
         
+        // Ensure date fields are properly formatted
+        if (userData.dob) {
+          try {
+            // Ensure dob is a valid date object
+            const dobDate = new Date(userData.dob);
+            if (!isNaN(dobDate.getTime())) {
+              // Format as ISO string for consistent handling
+              userData.dob = dobDate.toISOString();
+            }
+          } catch (err) {
+            console.error('Error formatting DOB from API:', err);
+          }
+        }
+        
+        console.log('User data from API:', userData);
+        
+        // Combine API data with any stored registration data
         if (storedUser) {
           try {
             const parsedStoredUser = JSON.parse(storedUser);
+            console.log('Stored user data:', parsedStoredUser);
             
             // Ensure registration data is preserved
             userData = {
@@ -56,11 +80,15 @@ const DashboardPage = () => {
               mobile: userData.mobile || parsedStoredUser.mobile,
               dob: userData.dob || parsedStoredUser.dob
             };
+            
+            // Update local storage with the latest data
+            localStorage.setItem('user', JSON.stringify(userData));
           } catch (err) {
             console.error('Error parsing stored user data:', err);
           }
         }
         
+        console.log('Final user data being set:', userData);
         setUser(userData);
         
         // Check if this is the first login
@@ -121,7 +149,7 @@ const DashboardPage = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [refreshData]);
 
   if (loading) {
     return (
@@ -323,10 +351,10 @@ const DashboardPage = () => {
           <div className="lg:col-span-3">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               {activeTab === 'welcome' && <WelcomeSection user={user} />}
-              {activeTab === 'profile' && <ProfileSection user={user} />}
+              {activeTab === 'profile' && <ProfileSection user={user} onRefresh={handleRefreshData} />}
               {activeTab === 'resume' && <ResumeSection user={user} />}
-              {activeTab === 'password' && <PasswordSection user={user} />}
-              {activeTab === 'tasks' && <div className="p-6"><Todo user={user} /></div>}
+              {activeTab === 'password' && <PasswordSection />}
+              {activeTab === 'tasks' && <Todo />}
               {activeTab === 'applications' && (
                 <div className="p-6">
                   <h2 className="text-xl font-semibold text-gray-800 mb-6">My Applications</h2>

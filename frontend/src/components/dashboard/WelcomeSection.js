@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const WelcomeSection = ({ user }) => {
+  // Log user data when component mounts
+  useEffect(() => {
+    console.log('WelcomeSection received user data:', user);
+  }, [user]);
+
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return 'Not provided';
@@ -19,6 +24,12 @@ const WelcomeSection = ({ user }) => {
       console.error('Error formatting date:', error);
       return 'Not provided';
     }
+  };
+
+  // Format phone number for display
+  const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber || phoneNumber.trim() === '') return 'Not provided';
+    return phoneNumber;
   };
 
   // Calculate age from DOB
@@ -46,7 +57,11 @@ const WelcomeSection = ({ user }) => {
   };
 
   // Check if user has completed their registration info
-  const hasCompletedBasicInfo = user && user.name && user.email && user.mobile && user.dob;
+  const hasCompletedBasicInfo = user && 
+    user.name && 
+    user.email && 
+    (user.mobile && user.mobile.trim() !== '') && 
+    user.dob;
 
   return (
     <div className="p-6">
@@ -114,20 +129,20 @@ const WelcomeSection = ({ user }) => {
           </div>
           <div className="space-y-3">
             <div>
-              <div className="text-sm text-gray-500">Phone Number</div>
-              <div className="font-medium">{user?.mobile || 'Not provided'}</div>
+              <div className="text-sm text-gray-500">Mobile Number</div>
+              <div className="font-medium">{formatPhoneNumber(user?.mobile)}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Date of Birth</div>
               <div className="font-medium">{formatDate(user?.dob)}</div>
             </div>
-            {user?.dob && (
+            {user?.dob && !isNaN(new Date(user.dob).getTime()) && (
               <div>
                 <div className="text-sm text-gray-500">Age</div>
                 <div className="font-medium">{calculateAge(user?.dob)} years</div>
               </div>
             )}
-            <div>
+            <div className="pt-2">
               <Link 
                 to="#" 
                 onClick={() => document.querySelector('button[data-tab="profile"]').click()} 

@@ -41,6 +41,8 @@ import AdminProfilePage from './pages/AdminProfilePage';
 import AdminInternshipsPage from './pages/AdminInternshipsPage';
 import AdminCategoriesPage from './pages/AdminCategoriesPage';
 import UserLoginPage from './pages/UserLoginPage';
+import AccountSettingsPage from './pages/AccountSettingsPage';
+import HelpSupportPage from './pages/HelpSupportPage';
 
 // Private route component for protected routes
 const PrivateRoute = ({ element, allowedUserTypes }) => {
@@ -185,6 +187,18 @@ const App = () => {
             <Route path="/resources/mock-tests" element={<MockTestsPage />} />
             <Route path="/resources/free-courses" element={<FreeCoursesPage />} />
             <Route path="/resources/webinars-events" element={<WebinarsEventsPage />} />
+            
+            {/* Account Settings & Help */}
+            <Route 
+              path="/account/settings" 
+              element={
+                <PrivateRoute 
+                  element={<AccountSettingsPage />} 
+                  allowedUserTypes={['jobseeker', 'employer', 'admin']} 
+                />
+              } 
+            />
+            <Route path="/help-support" element={<HelpSupportPage />} />
             
             {/* User Routes */}
             <Route 

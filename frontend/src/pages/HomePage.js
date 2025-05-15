@@ -82,68 +82,117 @@ const HomePage = () => {
     }, 1000);
   }, []);
 
+  // Animation related state and useEffect for "Top Companies Hiring" section
+  const [companyLogos, setCompanyLogos] = useState([
+    { id: 1, name: 'Google', logo: 'https://logo.clearbit.com/google.com' },
+    { id: 2, name: 'Microsoft', logo: 'https://logo.clearbit.com/microsoft.com' },
+    { id: 3, name: 'Amazon', logo: 'https://logo.clearbit.com/amazon.com' },
+    { id: 4, name: 'Apple', logo: 'https://logo.clearbit.com/apple.com' },
+    { id: 5, name: 'Meta', logo: 'https://logo.clearbit.com/meta.com' },
+    { id: 6, name: 'Netflix', logo: 'https://logo.clearbit.com/netflix.com' },
+    { id: 7, name: 'Adobe', logo: 'https://logo.clearbit.com/adobe.com' },
+    { id: 8, name: 'IBM', logo: 'https://logo.clearbit.com/ibm.com' },
+    { id: 9, name: 'Accenture', logo: 'https://logo.clearbit.com/accenture.com' },
+    { id: 10, name: 'Capgemini', logo: 'https://logo.clearbit.com/capgemini.com' },
+    { id: 11, name: 'TCS', logo: 'https://logo.clearbit.com/tcs.com' },
+    { id: 12, name: 'Infosys', logo: 'https://logo.clearbit.com/infosys.com' },
+  ]);
+
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-blue-600 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 relative z-10">
+      <section className="hero-section">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://plus.unsplash.com/premium_photo-1661344287754-5b54e8feb18b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+            alt="Hero background" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 to-indigo-900/80"></div>
+        </div>
+        
+        <div className="blur-shape bg-blue-500 w-96 h-96 -top-24 -right-24 z-10"></div>
+        <div className="blur-shape bg-indigo-600 w-80 h-80 top-1/2 -left-24 z-10"></div>
+        <div className="blur-shape bg-blue-400 w-64 h-64 -bottom-24 right-1/4 z-10"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative z-20 w-full">
           <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
               Find Your <span className="text-yellow-300">Perfect</span> Job
             </h1>
-            <p className="mt-6 text-xl text-white leading-relaxed max-w-lg mx-auto">
+            <p className="mt-6 text-xl text-white leading-relaxed max-w-lg mx-auto opacity-90">
               Navigate Your Next Career Move with FutureLift: Your Gateway to Opportunities!
             </p>
             
             <div className="mt-12 w-full max-w-3xl mx-auto">
-              <div className="flex rounded-xl overflow-hidden shadow-lg bg-white">
+              <div className="flex rounded-xl overflow-hidden shadow-xl bg-white/10 backdrop-blur-lg border border-white/20">
                 <div className="relative flex-grow">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i className="fas fa-search text-gray-400"></i>
                   </div>
                   <input
                     type="text"
-                    className="block w-full pl-12 pr-3 py-5 border-0 text-base text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-0"
+                    className="block w-full pl-12 pr-3 py-5 border-0 text-base text-white placeholder-gray-300 bg-transparent focus:outline-none focus:ring-0"
                     placeholder="Job title, company, or keywords"
                   />
                 </div>
-                <div className="relative inline-flex items-center border-l border-gray-200">
-                  <select className="h-full py-5 pl-4 pr-10 border-0 bg-white text-gray-700 font-medium appearance-none focus:outline-none focus:ring-0">
-                    <option>All Locations</option>
-                    <option>Remote</option>
-                    <option>Bengaluru</option>
-                    <option>Mumbai</option>
-                    <option>Delhi</option>
-                    <option>Hyderabad</option>
-                    <option>Chennai</option>
-                    <option>Kolkata</option>
-                    <option>Noida</option>
-                    <option>Gurgaon</option>
-                    <option>Pune</option>
-                    <option>Jaipur</option>
-                    <option>Ahmedabad</option>
-                    <option>Indore</option>
-                    
+                <div className="relative inline-flex items-center border-l border-gray-700/30">
+                  <select className="h-full py-5 pl-4 pr-10 border-0 bg-transparent text-white font-medium appearance-none focus:outline-none focus:ring-0">
+                    <option className="bg-gray-900 text-white">All Locations</option>
+                    <option className="bg-gray-900 text-white">Remote</option>
+                    <option className="bg-gray-900 text-white">Bengaluru</option>
+                    <option className="bg-gray-900 text-white">Mumbai</option>
+                    <option className="bg-gray-900 text-white">Delhi</option>
+                    <option className="bg-gray-900 text-white">Hyderabad</option>
+                    <option className="bg-gray-900 text-white">Chennai</option>
+                    <option className="bg-gray-900 text-white">Kolkata</option>
+                    <option className="bg-gray-900 text-white">Noida</option>
+                    <option className="bg-gray-900 text-white">Gurgaon</option>
+                    <option className="bg-gray-900 text-white">Pune</option>
+                    <option className="bg-gray-900 text-white">Jaipur</option>
+                    <option className="bg-gray-900 text-white">Ahmedabad</option>
+                    <option className="bg-gray-900 text-white">Indore</option>
                   </select>
                   <div className="pointer-events-none absolute right-3 flex items-center">
-                    <i className="fas fa-chevron-down text-xs text-gray-500"></i>
+                    <i className="fas fa-chevron-down text-xs text-gray-300"></i>
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="px-8 py-5 bg-white text-blue-600 font-medium hover:bg-gray-50 focus:outline-none focus:ring-0 rounded-r-xl"
+                  className="px-8 py-5 bg-primary-600 text-white font-medium hover:bg-primary-700 focus:outline-none focus:ring-0 transition-colors duration-300"
                 >
                   Search
                 </button>
               </div>
+              
+              {/* Popular searches */}
+              <div className="mt-4 text-white/80 text-sm flex flex-wrap justify-center gap-2">
+                <span className="font-medium">Popular:</span>
+                <a href="#" className="hover:text-yellow-300 transition-colors">Software Engineer</a>
+                <span>•</span>
+                <a href="#" className="hover:text-yellow-300 transition-colors">Data Scientist</a>
+                <span>•</span>
+                <a href="#" className="hover:text-yellow-300 transition-colors">Web Developer</a>
+                <span>•</span>
+                <a href="#" className="hover:text-yellow-300 transition-colors">Remote</a>
+              </div>
             </div>
+          </div>
+          
+          {/* Scroll down indicator */}
+          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white/80 animate-bounce cursor-pointer">
+            <a href="#categories" className="flex flex-col items-center">
+              <span className="text-sm mb-2">Scroll Down</span>
+              <i className="fas fa-chevron-down"></i>
+            </a>
           </div>
         </div>
       </section>
 
       {/* Job Categories */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="categories" className="py-16 gradient-bg-blue animated-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
               Explore Job Categories
@@ -158,21 +207,21 @@ const HomePage = () => {
               <Link 
                 to={`/jobs/category/${category.id}`} 
                 key={category.id}
-                className="flex flex-col items-center bg-white rounded-lg p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 group"
+                className="category-card animated-card rounded-lg p-4 transition-all duration-300 transform hover:-translate-y-1 group"
               >
-                <div className="h-16 w-16 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center mb-4 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
-                  <i className={`${category.icon} text-2xl`}></i>
+                <div className="h-14 w-14 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center mb-3 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
+                  <i className={`${category.icon} text-xl`}></i>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 text-center group-hover:text-primary-600 transition-colors duration-300">
+                <h3 className="text-base font-semibold text-gray-900 text-center group-hover:text-primary-600 transition-colors duration-300">
                   {category.name}
                 </h3>
-                <p className="mt-2 text-sm text-gray-500 text-center">
+                <p className="mt-1 text-xs text-gray-500 text-center">
                   {category.jobCount} Jobs Available
                 </p>
-                <div className="mt-4 text-primary-600 hidden group-hover:block transition-all duration-300">
+                <div className="view-jobs text-primary-600 text-sm">
                   <span className="flex items-center">
                     View Jobs 
-                    <i className="fas fa-arrow-right ml-2"></i>
+                    <i className="fas fa-arrow-right ml-1 text-xs"></i>
                   </span>
                 </div>
               </Link>
@@ -182,20 +231,20 @@ const HomePage = () => {
           <div className="mt-10 text-center">
             <Link
               to="/jobs/categories"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
             >
               View All Categories
-              <i className="fas fa-chevron-right ml-2"></i>
+              <i className="fas fa-chevron-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Statistics */}
-      <section className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-12 gradient-bg-purple animated-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg p-6 text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
               <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-primary-100 text-primary-600 mb-4">
                 <i className="fas fa-briefcase text-2xl"></i>
               </div>
@@ -203,7 +252,7 @@ const HomePage = () => {
               <div className="text-lg font-medium text-gray-600">Active Job Listings</div>
             </div>
             
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg p-6 text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
               <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-yellow-100 text-yellow-600 mb-4">
                 <i className="fas fa-building text-2xl"></i>
               </div>
@@ -211,7 +260,7 @@ const HomePage = () => {
               <div className="text-lg font-medium text-gray-600">Companies</div>
             </div>
             
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg p-6 text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
               <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-green-100 text-green-600 mb-4">
                 <i className="fas fa-users text-2xl"></i>
               </div>
@@ -219,7 +268,7 @@ const HomePage = () => {
               <div className="text-lg font-medium text-gray-600">Registered Job Seekers</div>
             </div>
             
-            <div className="bg-white overflow-hidden shadow-lg rounded-lg p-6 text-center transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
               <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-indigo-100 text-indigo-600 mb-4">
                 <i className="fas fa-check-circle text-2xl"></i>
               </div>
@@ -231,8 +280,8 @@ const HomePage = () => {
       </section>
 
       {/* Latest Jobs */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 gradient-bg-teal animated-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-3xl font-extrabold text-gray-900">Featured Job Opportunities</h2>
@@ -245,7 +294,7 @@ const HomePage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Accenture Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -296,7 +345,7 @@ const HomePage = () => {
             </div>
 
             {/* Capgemini Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -347,7 +396,7 @@ const HomePage = () => {
             </div>
 
             {/* EY Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -397,7 +446,7 @@ const HomePage = () => {
             </div>
 
             {/* Google Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -447,7 +496,7 @@ const HomePage = () => {
             </div>
 
             {/* Amazon Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -498,7 +547,7 @@ const HomePage = () => {
             </div>
 
             {/* Microsoft Job */}
-            <div className="bg-white shadow-sm hover:shadow-md rounded-lg border border-gray-100 overflow-hidden">
+            <div className="animated-card rounded-lg overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
@@ -549,77 +598,52 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
       {/* Top Companies Hiring */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 gradient-bg-teal animated-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900">Top Companies Hiring</h2>
+            <h2 className="text-3xl font-extrabold text-gray-900">Top Companies Trust Us</h2>
             <p className="mt-2 text-lg text-gray-500">Leading employers seeking outstanding talent like you</p>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-10">
-            {/* Company 1 - Google */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/google.com" alt="Google" className="h-10" />
+          <div className="logo-scroll-container relative max-w-6xl mx-auto overflow-hidden px-4">
+            {/* Logo container with padding on sides */}
+            <div className="logo-wrapper animate-scroll-left py-6">
+              {companyLogos.slice(0, 6).map((company) => (
+                <div key={company.id} className="logo-item">
+                  <img src={company.logo} alt={company.name} className="company-logo" />
+                </div>
+              ))}
+              {/* Duplicate the first set for seamless scrolling */}
+              {companyLogos.slice(0, 6).map((company) => (
+                <div key={`dup1-${company.id}`} className="logo-item">
+                  <img src={company.logo} alt={company.name} className="company-logo" />
+                </div>
+              ))}
             </div>
             
-            {/* Company 2 - Microsoft */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" className="h-10" />
+            {/* Second row of logos (scrolling in opposite direction) */}
+            <div className="logo-wrapper animate-scroll-right py-6">
+              {companyLogos.slice(6, 12).map((company) => (
+                <div key={company.id} className="logo-item">
+                  <img src={company.logo} alt={company.name} className="company-logo" />
+                </div>
+              ))}
+              {/* Duplicate the second set for seamless scrolling */}
+              {companyLogos.slice(6, 12).map((company) => (
+                <div key={`dup2-${company.id}`} className="logo-item">
+                  <img src={company.logo} alt={company.name} className="company-logo" />
+                </div>
+              ))}
             </div>
             
-            {/* Company 3 - Amazon */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/amazon.com" alt="Amazon" className="h-10" />
-            </div>
-            
-            {/* Company 4 - Apple */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/apple.com" alt="Apple" className="h-10" />
-            </div>
-            
-            {/* Company 5 - Meta */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/meta.com" alt="Meta" className="h-10" />
-            </div>
-            
-            {/* Company 6 - Netflix */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/netflix.com" alt="Netflix" className="h-10" />
-            </div>
-            
-            {/* Company 7 - Adobe */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/adobe.com" alt="Adobe" className="h-10" />
-            </div>
-            
-            {/* Company 8 - IBM */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/ibm.com" alt="IBM" className="h-10" />
-            </div>
-            
-            {/* Company 9 - Accenture */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/accenture.com" alt="Accenture" className="h-10" />
-            </div>
-            
-            {/* Company 10 - Capgemini */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/capgemini.com" alt="Capgemini" className="h-10" />
-            </div>
-            
-            {/* Company 11 - TCS */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/tcs.com" alt="TCS" className="h-10" />
-            </div>
-            
-            {/* Company 12 - Infosys */}
-            <div className="bg-white border border-gray-100 rounded-lg p-6 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
-              <img src="https://logo.clearbit.com/infosys.com" alt="Infosys" className="h-10" />
-            </div>
+            {/* Add subtle fade effects on the sides */}
+            <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#f0fdfa] to-transparent"></div>
+            <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#f0fdfa] to-transparent"></div>
           </div>
           
-          <div className="text-center">
+          <div className="text-center mt-8">
             <Link to="/companies" className="text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center">
               View All Companies <i className="fas fa-arrow-right ml-2"></i>
             </Link>
@@ -628,8 +652,21 @@ const HomePage = () => {
       </section>
 
       {/* User Testimonials */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 bg-gradient-to-br from-gray-900 to-indigo-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[#1a1a3a] bg-opacity-50"></div>
+          {/* Decorative elements */}
+          <div className="absolute top-10 left-10 w-4 h-4 rounded-full bg-white opacity-10"></div>
+          <div className="absolute top-20 left-40 w-6 h-6 rounded-full bg-white opacity-10"></div>
+          <div className="absolute top-60 left-20 w-3 h-3 rounded-full bg-white opacity-10"></div>
+          <div className="absolute top-40 right-80 w-5 h-5 rounded-full bg-white opacity-10"></div>
+          <div className="absolute top-20 right-40 w-4 h-4 rounded-full bg-white opacity-10"></div>
+          <div className="absolute top-80 right-20 w-6 h-6 rounded-full bg-white opacity-10"></div>
+          <div className="absolute bottom-20 left-40 w-5 h-5 rounded-full bg-white opacity-10"></div>
+          <div className="absolute bottom-40 right-60 w-4 h-4 rounded-full bg-white opacity-10"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold sm:text-4xl">What Our Users Say</h2>
             <p className="mt-4 max-w-2xl text-xl text-gray-300 mx-auto">
@@ -638,88 +675,98 @@ const HomePage = () => {
           </div>
           
           <div className="mt-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Testimonial 1 */}
-              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-6">
-                  <img 
-                    src="https://randomuser.me/api/portraits/men/32.jpg" 
-                    alt="John Doe" 
-                    className="h-14 w-14 rounded-full object-cover"
-                  />
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold">John Doe</h3>
-                    <p className="text-gray-400">Software Engineer, TechCorp</p>
+            <div className="relative">
+              <button className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-16 flex items-center justify-center w-12 h-12 rounded-full bg-gray-800/80 hover:bg-primary-600 focus:outline-none transition-all duration-300 z-20">
+                <i className="fas fa-chevron-left text-white text-lg"></i>
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Testimonial 1 */}
+                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="flex items-center mb-6">
+                    <img 
+                      src="https://randomuser.me/api/portraits/men/32.jpg" 
+                      alt="John Doe" 
+                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold">John Doe</h3>
+                      <p className="text-gray-400">Software Engineer, TechCorp</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300">
+                    "FutureLift helped me find my dream job quickly and easily. The platform is user-friendly and has a great selection of job listings."
+                  </p>
+                  <div className="mt-4 flex text-yellow-400">
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
                   </div>
                 </div>
-                <p className="text-gray-300">
-                  "FutureLift helped me find my dream job quickly and easily. The platform is user-friendly and has a great selection of job listings."
-                </p>
-                <div className="mt-4 flex text-yellow-400">
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
+                
+                {/* Testimonial 2 */}
+                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="flex items-center mb-6">
+                    <img 
+                      src="https://randomuser.me/api/portraits/women/44.jpg" 
+                      alt="Jane Smith" 
+                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold">Jane Smith</h3>
+                      <p className="text-gray-400">Product Manager, InnovateX</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300">
+                    "I love how FutureLift connects job seekers with top companies. It made my job search stress-free and successful!"
+                  </p>
+                  <div className="mt-4 flex text-yellow-400">
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                  </div>
+                </div>
+                
+                {/* Testimonial 3 */}
+                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                  <div className="flex items-center mb-6">
+                    <img 
+                      src="https://randomuser.me/api/portraits/men/67.jpg" 
+                      alt="Michael Johnson" 
+                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold">Michael Johnson</h3>
+                      <p className="text-gray-400">Data Analyst, TechNet</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300">
+                    "FutureLift provided me with valuable insights into job trends and opportunities in my field. Highly recommend!"
+                  </p>
+                  <div className="mt-4 flex text-yellow-400">
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                    <i className="fas fa-star"></i>
+                  </div>
                 </div>
               </div>
               
-              {/* Testimonial 2 */}
-              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-6">
-                  <img 
-                    src="https://randomuser.me/api/portraits/women/44.jpg" 
-                    alt="Jane Smith" 
-                    className="h-14 w-14 rounded-full object-cover"
-                  />
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold">Jane Smith</h3>
-                    <p className="text-gray-400">Product Manager, InnovateX</p>
-                  </div>
-                </div>
-                <p className="text-gray-300">
-                  "I love how FutureLift connects job seekers with top companies. It made my job search stress-free and successful!"
-                </p>
-                <div className="mt-4 flex text-yellow-400">
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                </div>
-              </div>
-              
-              {/* Testimonial 3 */}
-              <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
-                <div className="flex items-center mb-6">
-                  <img 
-                    src="https://randomuser.me/api/portraits/men/67.jpg" 
-                    alt="Michael Johnson" 
-                    className="h-14 w-14 rounded-full object-cover"
-                  />
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold">Michael Johnson</h3>
-                    <p className="text-gray-400">Data Analyst, TechNet</p>
-                  </div>
-                </div>
-                <p className="text-gray-300">
-                  "FutureLift provided me with valuable insights into job trends and opportunities in my field. Highly recommend!"
-                </p>
-                <div className="mt-4 flex text-yellow-400">
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                </div>
-              </div>
+              <button className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-16 flex items-center justify-center w-12 h-12 rounded-full bg-gray-800/80 hover:bg-primary-600 focus:outline-none transition-all duration-300 z-20">
+                <i className="fas fa-chevron-right text-white text-lg"></i>
+              </button>
             </div>
             
             <div className="mt-10 flex justify-center">
               <div className="flex space-x-3">
-                <button className="w-3 h-3 rounded-full bg-gray-600 focus:outline-none"></button>
+                <button className="w-3 h-3 rounded-full bg-gray-600 hover:bg-primary-400 focus:outline-none transition-all duration-300"></button>
                 <button className="w-3 h-3 rounded-full bg-primary-500 focus:outline-none"></button>
-                <button className="w-3 h-3 rounded-full bg-gray-600 focus:outline-none"></button>
+                <button className="w-3 h-3 rounded-full bg-gray-600 hover:bg-primary-400 focus:outline-none transition-all duration-300"></button>
               </div>
             </div>
           </div>
@@ -727,8 +774,13 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary-700">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+      <section className="bg-gradient-to-tr from-blue-700 via-primary-700 to-indigo-800 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
+          <div className="absolute top-1/3 -left-24 w-80 h-80 rounded-full bg-indigo-600 opacity-20 blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 relative z-10">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="lg:max-w-xl">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -742,12 +794,12 @@ const HomePage = () => {
             <div className="mt-8 lg:mt-0">
               <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
                 <div className="inline-flex rounded-md shadow">
-                  <Link to="/login?signup=true" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100">
+                  <Link to="/login?signup=true" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
                     Get Started
                   </Link>
                 </div>
                 <div className="inline-flex rounded-md shadow">
-                  <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800">
+                  <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
                     Learn More
                   </Link>
                 </div>
@@ -756,7 +808,7 @@ const HomePage = () => {
           </div>
           
           {/* Subscription Form */}
-          <div className="mt-10 border-t border-primary-600 pt-8">
+          <div className="mt-10 border-t border-primary-600/50 pt-8">
             <form className="sm:flex" onSubmit={handleSubscribe}>
               <div className="flex-1">
                 <label htmlFor="skills" className="sr-only">Your skills</label>
@@ -765,7 +817,7 @@ const HomePage = () => {
                   name="skills"
                   type="text"
                   required
-                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md"
+                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
                   placeholder="Enter your skills (e.g. JavaScript, React, UX Design)"
                   value={subscription.skills}
                   onChange={handleSubscriptionChange}
@@ -778,7 +830,7 @@ const HomePage = () => {
                   name="email"
                   type="email"
                   required
-                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md"
+                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
                   placeholder="Enter your email"
                   value={subscription.email}
                   onChange={handleSubscriptionChange}
@@ -787,7 +839,7 @@ const HomePage = () => {
               <div className="mt-3 sm:mt-0 sm:ml-3">
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400"
+                  className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400 transition-all duration-300 transform hover:scale-105"
                 >
                   <i className="fas fa-bell mr-2"></i> Subscribe
                 </button>
