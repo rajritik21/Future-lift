@@ -1,7 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    // Reset already subscribed state when user types
+    if (alreadySubscribed) setAlreadySubscribed(false);
+  };
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (email.trim() !== '') {
+      // Reset states
+      setSubscribed(false);
+      setAlreadySubscribed(false);
+      
+      // Send the email to the backend API
+      fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          skills: 'Job Alerts Subscriber', // Provide a default value
+          source: 'footer',
+          preferences: {
+            jobAlerts: true,
+            newsletters: true
+          }
+        }),
+      })
+        .then(response => {
+          console.log('Response status:', response.status);
+          return response.json().then(data => {
+            if (!response.ok) {
+              console.log('Error response data:', data);
+              // Check if this is a duplicate email error
+              if (data.message && data.message.toLowerCase().includes('already subscribed')) {
+                setAlreadySubscribed(true);
+                throw new Error('Already subscribed');
+              }
+              throw new Error(data.message || 'Failed to subscribe');
+            }
+            return data;
+          });
+        })
+        .then(data => {
+          console.log('Footer subscription successful:', data);
+          
+          // Store the email for display in success message
+          localStorage.setItem('subscribedEmail', email);
+          
+          // Show success message
+          setSubscribed(true);
+          setEmail('');
+          
+          // Reset the subscribed state after 5 seconds
+          setTimeout(() => {
+            setSubscribed(false);
+          }, 5000);
+        })
+        .catch(error => {
+          console.error('Error during subscription:', error);
+          
+          // Don't show alert for already subscribed case
+          if (!error.message.includes('Already subscribed')) {
+            alert(error.message || 'Failed to subscribe. Please try again later.');
+          }
+        });
+    }
+  };
+
   return (
     <footer className="relative bg-gradient-to-br from-indigo-900 to-blue-900 text-white overflow-hidden">
       {/* Decorative Elements */}
@@ -39,16 +113,46 @@ const Footer = () => {
                 Job Alerts
                 <span className="absolute bottom-0 left-0 w-10 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400"></span>
               </h3>
-              <div className="flex mt-1">
-                <input 
-                  type="email" 
-                  placeholder="Your email" 
-                  className="bg-white/10 backdrop-blur-sm text-white placeholder-white/50 px-2 py-1 text-sm rounded-l-md border border-white/20 focus:outline-none focus:border-yellow-300/50 w-full" 
-                />
-                <button className="bg-gradient-to-r from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 text-indigo-900 font-medium px-2 py-1 rounded-r-md transition-all duration-300">
-                  <i className="fas fa-paper-plane text-sm"></i>
-                </button>
-              </div>
+              {!subscribed && !alreadySubscribed ? (
+                <form onSubmit={handleSubscribe} className="flex mt-1">
+                  <input 
+                    type="email" 
+                    placeholder="Your email" 
+                    value={email}
+                    onChange={handleEmailChange}
+                    className="bg-white/10 backdrop-blur-sm text-white placeholder-white/50 px-2 py-1 text-sm rounded-l-md border border-white/20 focus:outline-none focus:border-yellow-300/50 w-full" 
+                    required
+                  />
+                  <button 
+                    type="submit"
+                    className="bg-gradient-to-r from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 text-indigo-900 font-medium px-2 py-1 rounded-r-md transition-all duration-300"
+                  >
+                    <i className="fas fa-paper-plane text-sm"></i>
+                  </button>
+                </form>
+              ) : subscribed ? (
+                <div className="bg-green-600/20 border border-green-600/30 rounded-md p-2 mt-1 text-sm text-white flex items-center">
+                  <svg className="w-4 h-4 mr-1 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Thanks for subscribing! We'll notify you when new jobs are listed. <span className="text-xs opacity-75">({localStorage.getItem('subscribedEmail')})</span></span>
+                </div>
+              ) : (
+                <div className="bg-blue-600/20 border border-blue-600/30 rounded-md p-2 mt-1 text-sm text-white flex items-center">
+                  <svg className="w-4 h-4 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <div className="flex-1">
+                    <span>You're already subscribed to job alerts.</span>
+                    <button 
+                      onClick={() => setAlreadySubscribed(false)}
+                      className="ml-2 text-yellow-300 hover:text-yellow-400 underline text-xs"
+                    >
+                      Try another email
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="flex space-x-4 mt-2">
@@ -99,6 +203,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/team" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>Our Team</span>
+                </Link>
+              </li>
+              <li>
                 <Link to="/jobs/walkin" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Walk-In Jobs</span>
@@ -127,6 +237,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/faq" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>FAQ</span>
+                </Link>
+              </li>
+              <li>
                 <Link to="/jobs/government" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Government Jobs</span>
@@ -136,12 +252,6 @@ const Footer = () => {
                 <Link to="/resources/resume-tips" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Resume Tips</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs/remote" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
-                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>Remote Jobs</span>
                 </Link>
               </li>
             </ul>

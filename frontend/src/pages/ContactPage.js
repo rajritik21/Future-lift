@@ -177,65 +177,79 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-16 relative overflow-hidden">
-      {/* Animated background elements */}
+    <div className="min-h-screen bg-cover bg-center py-16 relative overflow-hidden" style={{ backgroundImage: 'url("/path/to/your/background-image.jpg")' }}>
+      {/* Animated background elements - Removing as per new design */}
+      {/* <style>
+        {`
+          @keyframes blob {
+            0% {
+              transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+              transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+              transform: translate(-20px, 20px) scale(0.9);
+            }
+            100% {
+              transform: translate(0px, 0px) scale(1);
+            }
+          }
+
+          .animate-blob {
+            animation: blob 7s infinite;
+          }
+
+          .animation-delay-2000 {
+            animation-delay: 2s;
+          }
+
+          .animation-delay-4000 {
+            animation-delay: 4s;
+          }
+
+          @keyframes fade-in-up {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .fade-in-up {
+            animation: fade-in-up 0.6s ease-out forwards;
+          }
+
+          .animation-delay-200 {
+            animation-delay: 0.2s;
+          }
+          .animation-delay-400 {
+            animation-delay: 0.4s;
+          }
+           .animation-delay-600 {
+            animation-delay: 0.6s;
+          }
+           .animation-delay-800 {
+            animation-delay: 0.8s;
+          }
+        `}
+      </style>
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="absolute top-96 -right-24 w-96 h-96 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute -bottom-24 left-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
+      </div> */}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-              Contact us
-            </span>
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We'd love to hear from you! Our team typically responds within 24 hours.
-          </p>
-          
-          <div className="max-w-3xl mx-auto mt-12 grid gap-8 grid-cols-1 md:grid-cols-3">
-            {/* Address */}
-            <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-4 text-white">
-                <i className="fas fa-map-marker-alt text-xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Address</h3>
-              <p className="text-gray-600 text-center">
-                HIT COLLEGE,Haldia<br />
-                Pin 721657
-              </p>
-            </div>
-
-            {/* Call us */}
-            <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mb-4 text-white">
-                <i className="fas fa-phone text-xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Call us</h3>
-              <p className="text-gray-600">+91 87099 08484</p>
-            </div>
-
-            {/* Email us */}
-            <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-4 text-white">
-                <i className="fas fa-envelope text-xl"></i>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Email us</h3>
-              <p className="text-gray-600">futurelifthit@gmail.com</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Form Section */}
-        <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        {/* Second Column: Contact Form - Moved to be first */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden fade-in-up animation-delay-400">
           <div className="p-8 md:p-12">
             <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Get in touch with us.</h2>
-              <p className="text-gray-600">We're here to assist you.</p>
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">Get in touch with us.</h2>
+              <p className="text-gray-500">We're here to assist you.</p>
               <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
             </div>
 
@@ -272,7 +286,8 @@ const ContactPage = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className={`w-full pl-10 p-4 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.name ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all`}
+                      placeholder="Enter your full name"
+                      className={`w-full pl-10 p-4 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.name ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all duration-200 ease-in-out`}
                     />
                   </div>
                   {errors.name && (
@@ -293,7 +308,8 @@ const ContactPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full pl-10 p-4 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.email ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all`}
+                      placeholder="Enter your email address"
+                      className={`w-full pl-10 p-4 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.email ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all duration-200 ease-in-out`}
                     />
                   </div>
                   {errors.email && (
@@ -314,7 +330,8 @@ const ContactPage = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className={`w-full pl-10 p-4 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.phone ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all`}
+                      placeholder="Enter your phone number (optional)"
+                      className={`w-full pl-10 p-4 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.phone ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all duration-200 ease-in-out`}
                     />
                   </div>
                   {errors.phone && (
@@ -330,7 +347,7 @@ const ContactPage = () => {
                     name="user_type"
                     value={formData.user_type}
                     onChange={handleChange}
-                    className={`w-full p-4 border ${errors.user_type ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.user_type ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all`}
+                    className={`w-full p-4 border ${errors.user_type ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.user_type ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all duration-200 ease-in-out`}
                   >
                     <option value="Job Seeker">Job Seeker</option>
                     <option value="Employer">Employer</option>
@@ -342,14 +359,16 @@ const ContactPage = () => {
                 </div>
 
                 {/* Message - moved next to user type */}
-                <div className="group">
+                <div className="group md:col-span-2">
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                   <textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    className={`w-full p-4 border ${errors.message ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.message ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all`}
+                    rows="5"
+                    placeholder="Write your message here..."
+                    className={`w-full p-4 border ${errors.message ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 ${errors.message ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'} transition-all duration-200 ease-in-out`}
                   ></textarea>
                   {errors.message && (
                     <p className="text-red-500 text-sm mt-2">{errors.message}</p>
@@ -361,12 +380,57 @@ const ContactPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
+                  {isSubmitting && (
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l2-2.647z"></path>
+                    </svg>
+                  )}
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+
+        {/* First Column: Contact Info - Moved to be second */}
+        <div className="text-gray-800 fade-in-up">
+          <h2 className="text-4xl font-bold mb-6">Contact Information</h2>
+          <div className="space-y-6 text-lg">
+            {/* Address */}
+            <div className="flex items-start">
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-4">
+                <i className="fas fa-map-marker-alt text-xl"></i>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Address</h3>
+                <p>HIT COLLEGE,Haldia<br />Pin 721657</p>
+              </div>
+            </div>
+
+            {/* Call us */}
+            <div className="flex items-start">
+              <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center mr-4">
+                <i className="fas fa-phone text-xl"></i>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Call us</h3>
+                <p>+91 87099 08484</p>
+              </div>
+            </div>
+
+            {/* Email us */}
+            <div className="flex items-start">
+              <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center mr-4">
+                <i className="fas fa-envelope text-xl"></i>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Email us</h3>
+                <p>futurelifthit@gmail.com</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -2,12 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
+// Import company logo components
+import { 
+  TCSLogo, 
+  InfosysLogo, 
+  WiproLogo, 
+  AccentureLogo, 
+  CognizantLogo, 
+  HCLLogo 
+} from '../assets/company-logos/mock-test/CompanyLogos';
+
 const MockTestsPage = () => {
   const companyTests = [
     {
       id: 1,
       name: 'TCS National Qualifier Test',
-      logo: '/images/companies/tcs.png',
+      logo: <TCSLogo />,
       duration: '180 minutes',
       sections: ['Verbal Ability', 'Reasoning', 'Quantitative Aptitude', 'Coding'],
       difficulty: 'Medium'
@@ -15,7 +25,7 @@ const MockTestsPage = () => {
     {
       id: 2,
       name: 'Infosys InfyTQ',
-      logo: '/images/companies/infosys.png',
+      logo: <InfosysLogo />,
       duration: '180 minutes',
       sections: ['Quantitative Aptitude', 'Logical Reasoning', 'Verbal Ability', 'Programming'],
       difficulty: 'Medium-Hard'
@@ -23,7 +33,7 @@ const MockTestsPage = () => {
     {
       id: 3,
       name: 'Wipro NLTH',
-      logo: '/images/companies/wipro.png',
+      logo: <WiproLogo />,
       duration: '150 minutes',
       sections: ['Aptitude', 'Written Communication', 'Coding Assessment'],
       difficulty: 'Medium'
@@ -31,7 +41,7 @@ const MockTestsPage = () => {
     {
       id: 4,
       name: 'Accenture Coding Assessment',
-      logo: '/images/companies/accenture.png',
+      logo: <AccentureLogo />,
       duration: '90 minutes',
       sections: ['Cognitive Ability', 'Technical Assessment', 'Coding Challenge'],
       difficulty: 'Medium-Hard'
@@ -39,7 +49,7 @@ const MockTestsPage = () => {
     {
       id: 5,
       name: 'Cognizant GenC',
-      logo: '/images/companies/cognizant.png',
+      logo: <CognizantLogo />,
       duration: '120 minutes',
       sections: ['Quantitative Ability', 'Reasoning', 'Verbal Ability', 'Coding'],
       difficulty: 'Medium'
@@ -47,7 +57,7 @@ const MockTestsPage = () => {
     {
       id: 6,
       name: 'HCL TechBee',
-      logo: '/images/companies/hcl.png',
+      logo: <HCLLogo />,
       duration: '120 minutes',
       sections: ['Quantitative Ability', 'Logical Reasoning', 'Verbal Ability'],
       difficulty: 'Easy-Medium'
@@ -119,7 +129,7 @@ const MockTestsPage = () => {
                 <div key={test.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                   <div className="p-5 border-b bg-gray-50 flex items-center">
                     <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 mr-4 overflow-hidden flex items-center justify-center">
-                      <img src={test.logo} alt={test.name} className="w-full h-full object-cover" />
+                      {test.logo}
                     </div>
                     <h3 className="font-semibold text-lg">{test.name}</h3>
                   </div>

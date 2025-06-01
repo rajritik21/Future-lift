@@ -348,7 +348,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
           {/* Navigation Links - Center */}
           <div className="hidden md:flex md:items-center md:justify-center flex-1 mx-4">
             <div className="flex space-x-2 xl:space-x-4">
-              <Link to="/" className="relative group px-2 py-2 text-[14px] font-medium text-white hover:text-yellow-200 transition-all duration-300">
+              <Link to="/" className="relative group px-2 py-2 text-[14px] font-semibold text-white hover:text-yellow-200 transition-all duration-300">
                 <span className="relative z-10">Home</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400 group-hover:w-full transition-all duration-300"></span>
               </Link>

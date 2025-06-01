@@ -19,6 +19,8 @@ const HomePage = () => {
   });
   
   const [subscribeSuccess, setSubscribeSuccess] = useState(false);
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const [subscribeError, setSubscribeError] = useState('');
 
   const handleSubscriptionChange = (e) => {
     const { name, value } = e.target;
@@ -26,27 +28,79 @@ const HomePage = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Reset error states when user starts typing
+    if (alreadySubscribed) setAlreadySubscribed(false);
+    if (subscribeError) setSubscribeError('');
   };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
     
-    // In a real application, you would send this data to your backend API
-    console.log('Subscription data:', subscription);
+    // Reset states
+    setSubscribeSuccess(false);
+    setAlreadySubscribed(false);
+    setSubscribeError('');
     
-    // Show success message
-    setSubscribeSuccess(true);
-    
-    // Reset form
-    setSubscription({
-      skills: '',
-      email: ''
-    });
-    
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-      setSubscribeSuccess(false);
-    }, 5000);
+    // Send subscription data to backend API
+    fetch('/api/subscriptions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: subscription.email,
+        skills: subscription.skills,
+        subscriptionDate: new Date(),
+        source: 'homepage'
+      }),
+    })
+      .then(response => {
+        console.log('Response status:', response.status);
+        return response.json().then(data => {
+          console.log('Response data:', data);
+          if (!response.ok) {
+            // Check if this is a duplicate email error
+            if (data.message && data.message.toLowerCase().includes('already subscribed')) {
+              setAlreadySubscribed(true);
+              throw new Error('You are already subscribed with this email. We\'ll notify you about new matching jobs.');
+            }
+            throw new Error(data.message || 'Failed to subscribe');
+          }
+          return data;
+        });
+      })
+      .then(data => {
+        console.log('Subscription successful:', data);
+        
+        // Store the email for display in success message
+        localStorage.setItem('subscribedEmail', subscription.email);
+        localStorage.setItem('subscribedSkills', subscription.skills);
+        
+        // Show success message
+        setSubscribeSuccess(true);
+        
+        // Reset form
+        setSubscription({
+          skills: '',
+          email: ''
+        });
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          setSubscribeSuccess(false);
+        }, 5000);
+      })
+      .catch(error => {
+        console.error('Error during subscription:', error);
+        
+        // Set appropriate error message
+        if (error.message.includes('already subscribed')) {
+          setAlreadySubscribed(true);
+        } else {
+          setSubscribeError(error.message || 'Failed to subscribe. Please try again later.');
+        }
+      });
   };
 
   useEffect(() => {
@@ -809,51 +863,87 @@ const HomePage = () => {
           
           {/* Subscription Form */}
           <div className="mt-10 border-t border-primary-600/50 pt-8">
-            <form className="sm:flex" onSubmit={handleSubscribe}>
-              <div className="flex-1">
-                <label htmlFor="skills" className="sr-only">Your skills</label>
-                <input
-                  id="skills"
-                  name="skills"
-                  type="text"
-                  required
-                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
-                  placeholder="Enter your skills (e.g. JavaScript, React, UX Design)"
-                  value={subscription.skills}
-                  onChange={handleSubscriptionChange}
-                />
+            {subscribeSuccess ? (
+              <div className="bg-primary-800/50 backdrop-blur-sm rounded-lg p-6 text-center">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                  <svg className="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Thank You for Subscribing!</h3>
+                <p className="text-gray-200 mb-4">
+                  We'll notify you when new jobs matching <span className="font-semibold text-yellow-300">{localStorage.getItem('subscribedSkills')}</span> are posted.
+                </p>
+                <p className="text-gray-300 text-sm">
+                  Job alerts will be sent to <span className="font-medium text-white">{localStorage.getItem('subscribedEmail')}</span>
+                </p>
               </div>
-              <div className="mt-3 sm:mt-0 sm:ml-3">
-                <label htmlFor="email" className="sr-only">Email address</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
-                  placeholder="Enter your email"
-                  value={subscription.email}
-                  onChange={handleSubscriptionChange}
-                />
-              </div>
-              <div className="mt-3 sm:mt-0 sm:ml-3">
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400 transition-all duration-300 transform hover:scale-105"
+            ) : alreadySubscribed ? (
+              <div className="bg-primary-800/50 backdrop-blur-sm rounded-lg p-6 text-center">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
+                  <svg className="h-10 w-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Already Subscribed!</h3>
+                <p className="text-gray-200 mb-4">
+                  This email is already in our subscription list. We'll continue to send you relevant job alerts.
+                </p>
+                <button 
+                  onClick={() => setAlreadySubscribed(false)} 
+                  className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none"
                 >
-                  <i className="fas fa-bell mr-2"></i> Subscribe
+                  Try Different Email
                 </button>
               </div>
-            </form>
-            {subscribeSuccess && (
-              <div className="mt-3 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                <strong className="font-bold">Success! </strong>
-                <span className="block sm:inline">You've been subscribed to job alerts matching your skills.</span>
-              </div>
+            ) : (
+              <>
+                <form className="sm:flex" onSubmit={handleSubscribe}>
+                  <div className="flex-1">
+                    <label htmlFor="skills" className="sr-only">Your skills</label>
+                    <input
+                      id="skills"
+                      name="skills"
+                      type="text"
+                      required
+                      className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
+                      placeholder="Enter your skills (e.g. JavaScript, React, UX Design)"
+                      value={subscription.skills}
+                      onChange={handleSubscriptionChange}
+                    />
+                  </div>
+                  <div className="mt-3 sm:mt-0 sm:ml-3">
+                    <label htmlFor="email" className="sr-only">Email address</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
+                      placeholder="Enter your email"
+                      value={subscription.email}
+                      onChange={handleSubscriptionChange}
+                    />
+                  </div>
+                  <div className="mt-3 sm:mt-0 sm:ml-3">
+                    <button
+                      type="submit"
+                      className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400 transition-all duration-300 transform hover:scale-105"
+                    >
+                      <i className="fas fa-bell mr-2"></i> Subscribe
+                    </button>
+                  </div>
+                </form>
+                {subscribeError && (
+                  <div className="mt-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span className="block sm:inline">{subscribeError}</span>
+                  </div>
+                )}
+                <p className="mt-3 text-sm text-gray-300">
+                  Get personalized job alerts matching your skills sent directly to your inbox. No spam, ever.
+                </p>
+              </>
             )}
-            <p className="mt-3 text-sm text-gray-300">
-              Get personalized job alerts matching your skills sent directly to your inbox. No spam, ever.
-            </p>
           </div>
         </div>
       </section>

@@ -155,15 +155,15 @@ const InterviewTipsPage = () => {
                   Perfect for freshers and experienced candidates preparing for behavioral and situational questions.
                 </p>
                 <div className="space-y-2">
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
+                  <a href="https://drive.google.com/drive/folders/1--_MnRbIKNtEThE3ZB4STDS9SFDsjJAx?usp=sharing" target="_blank" className="flex items-center text-primary-600 hover:text-primary-800">
                     <span className="mr-2">📄</span>
-                    <span>Top 25 HR Interview Questions (PDF)</span>
+                    <span>Top  HR Interview Questions And Answers(PDF)</span>
                   </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
+                  <a href="https://drive.google.com/drive/folders/1UboR0drJGvuiSXbUPFEUJQMFks0-9Cb3?usp=drive_link" className="flex items-center text-primary-600 hover:text-primary-800">
                     <span className="mr-2">📄</span>
                     <span>Behavioral Interview Answers Using STAR Method (PDF)</span>
                   </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
+                  <a href ="https://drive.google.com/drive/folders/1znK0S6dxmpNz3euQHmHIz-HExPMK0sQq?usp=drive_link" target="_blank" className="flex items-center text-primary-600 hover:text-primary-800">
                     <span className="mr-2">📄</span>
                     <span>Interview Etiquette & Body Language Tips (PDF)</span>
                   </a>
@@ -175,32 +175,59 @@ const InterviewTipsPage = () => {
                 <p className="text-gray-600 mb-3">
                   Boost your technical knowledge with quick revision notes and cheat sheets for key subjects:
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>Java Notes (PDF)</span>
-                  </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>SQL Notes (PDF)</span>
-                  </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>HTML Notes (PDF)</span>
-                  </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>CSS Notes (PDF)</span>
-                  </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>JavaScript Notes (PDF)</span>
-                  </a>
-                  <a href="#" className="flex items-center text-primary-600 hover:text-primary-800">
-                    <span className="mr-2">💻</span>
-                    <span>Python Notes (PDF)</span>
-                  </a>
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-3">Available Topics:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-700">
+                    <div className="flex items-center">
+                      <i className="fas fa-code text-blue-500 mr-2"></i>
+                      <span>C++</span>
+                    </div>
+                    <div className="flex items-center">
+                       <i className="fab fa-css3-alt text-blue-500 mr-2"></i>
+                      <span>CSS</span>
+                    </div>
+                    <div className="flex items-center">
+                       <i className="fas fa-atom text-blue-500 mr-2"></i>
+                      <span>DSA</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fab fa-html5 text-blue-500 mr-2"></i>
+                      <span>HTML</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fab fa-java text-blue-500 mr-2"></i>
+                      <span>Java</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fab fa-js text-blue-500 mr-2"></i>
+                      <span>JavaScript</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fab fa-python text-blue-500 mr-2"></i>
+                      <span>Python</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fab fa-react text-blue-500 mr-2"></i>
+                      <span>React</span>
+                    </div>
+                     <div className="flex items-center">
+                       <i className="fas fa-database text-blue-500 mr-2"></i>
+                      <span>SQL</span>
+                    </div>
+                  </div>
                 </div>
+
+                <a
+                  href="https://drive.google.com/drive/folders/1DqrltG3vB5Nkj6yMwbj_FB0ZzTxJxG8j?usp=drive_link" // !!! REPLACE WITH ACTUAL LINK !!!
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors duration-200"
+                >
+                  View All Technical Notes
+                  <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M11 3a1 1 0 100 2h4a1 1 0 001-1V4a1 1 0 00-1-1h-4zm-1 4a1 1 0 011-1h5a1 1 0 110 2h-5a1 1 0 01-1-1zm1 3a1 1 0 100 2h4a1 1 0 100-2h-4zM7 13a1 1 0 011-1h5a1 1 0 110 2h-5a1 1 0 01-1-1zM4 7a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm1 3a1 1 0 000 2h1a1 1 0 100-2H5z" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

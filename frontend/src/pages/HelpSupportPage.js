@@ -73,16 +73,17 @@ const HelpSupportPage = () => {
                 </a>
               </div>
               
-              <div className="bg-green-50 p-4 rounded-md flex-1">
-                <h3 className="text-lg font-medium text-green-800 mb-2">Live Chat</h3>
+              <div className="bg-blue-50 p-4 rounded-md flex-1">
+                <h3 className="text-lg font-medium text-blue-800 mb-2">Contact Us</h3>
                 <p className="text-gray-700 mb-3">
-                  Chat with our support team in real-time during business hours.
+                  Have a specific question or need detailed support? Contact us directly.
                 </p>
-                <button 
-                  className="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none transition-colors duration-200"
+                <Link 
+                  to="/contact" 
+                  className="inline-flex items-center text-blue-600 hover:text-blue-800"
                 >
-                  Start Chat
-                </button>
+                  Go to Contact Page
+                </Link>
               </div>
             </div>
             
