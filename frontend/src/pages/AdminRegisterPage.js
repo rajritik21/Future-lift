@@ -95,10 +95,11 @@ const AdminRegisterPage = () => {
       return;
     }
 
-    // Validate date of birth (ensure they're at least 18 years old)
+    // Validate date of birth (ensure they're between 18 and 60 years old)
     const dobDate = new Date(formData.dob);
     const today = new Date();
     const minAge = 18;
+    const maxAge = 60;
     
     // Calculate age
     let age = today.getFullYear() - dobDate.getFullYear();
@@ -109,6 +110,11 @@ const AdminRegisterPage = () => {
     
     if (age < minAge) {
       setError(`Admin must be at least ${minAge} years old.`);
+      return;
+    }
+    
+    if (age > maxAge) {
+      setError(`Admin must be ${maxAge} years old or younger.`);
       return;
     }
 
@@ -273,15 +279,28 @@ const AdminRegisterPage = () => {
                 <span className="input-icon">
                   <i className="fas fa-calendar-alt"></i>
                 </span>
-                <input 
-                  type="date" 
-                  name="dob" 
-                  placeholder="Date of Birth"
-                  className="date-input"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="date-input-wrapper">
+                  <input 
+                    type="date" 
+                    name="dob" 
+                    placeholder="Date of Birth"
+                    className="date-input"
+                    value={formData.dob}
+                    onChange={handleChange}
+                    min={`${new Date().getFullYear() - 60}-01-01`}
+                    max={`${new Date().getFullYear() - 18}-12-31`}
+                    required
+                    style={{ paddingRight: "40px" }}
+                  />
+                  <div className="date-tooltip info-right" style={{ right: "10px" }}>
+                    <i className="fas fa-info-circle"></i>
+                    <span className="date-tooltip-text" style={{ width: "280px", marginLeft: "-140px" }}>
+                      Enter your date of birth in MM/DD/YYYY format.<br/>
+                      Admin must be between 18 and 60 years old.<br/>
+                      This information is used for account verification and security purposes.
+                    </span>
+                  </div>
+                </div>
               </div>
               
               <div className="input-group">

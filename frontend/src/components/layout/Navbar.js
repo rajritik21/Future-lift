@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import * as notificationService from '../../services/notificationService';
+import useScrollToSection from '../../hooks/useScrollToSection';
 
 const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,7 +13,9 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
   const [isCompaniesOpen, setIsCompaniesOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const dropdownTimerRef = useRef(null);
+  const scrollToSection = useScrollToSection();
 
   // Get user data from localStorage
   const getUserData = () => {
@@ -43,6 +47,30 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
     return user && user.avatar ? user.avatar.url || user.avatar : null;
   };
 
+  // Fetch notification count when the component mounts or auth state changes
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      if (isAuthenticated) {
+        try {
+          const count = await notificationService.getUnreadCount();
+          setUnreadNotifications(count);
+        } catch (err) {
+          console.error('Error fetching notification count:', err);
+          setUnreadNotifications(0);
+        }
+      } else {
+        setUnreadNotifications(0);
+      }
+    };
+
+    fetchNotificationCount();
+
+    // Set up an interval to check for new notifications every 2 minutes
+    const intervalId = setInterval(fetchNotificationCount, 2 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isAuthenticated]);
+
   // Handle scroll event to change navbar style
   useEffect(() => {
     const handleScroll = () => {
@@ -73,6 +101,9 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
       setIsResourcesOpen(!isResourcesOpen);
     } else if (dropdown === 'categories') {
       setIsCategoriesOpen(!isCategoriesOpen);
+    } else if (dropdown === 'mobile-employers' || dropdown === 'mobile-auth') {
+      // For mobile dropdowns, toggle them in the activeDropdown state
+      setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
     } else {
       setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
     }
@@ -95,6 +126,18 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
   const getSlug = (name) => {
     return name.toLowerCase().replace(/\s+/g, '-');
   };
+
+  // Notification Bell Component
+  const NotificationBell = () => (
+    <Link to="/notifications" className="relative text-white hover:text-yellow-300 transition-colors duration-300 flex items-center mx-2">
+      <i className="fas fa-bell text-xl"></i>
+      {unreadNotifications > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          {unreadNotifications > 9 ? '9+' : unreadNotifications}
+        </span>
+      )}
+    </Link>
+  );
 
   const authLinks = (
     <>
@@ -161,20 +204,16 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
           )}
         </div>
       )}
-      {userType !== 'admin' && (
+      <div className="relative ml-auto flex items-center">
+        {/* Notification Bell for all user types */}
+        <NotificationBell />
+        
+        {/* User account dropdown */}
         <div 
-          className="relative ml-auto"
+          className="relative"
           onMouseEnter={() => handleMouseEnter('user-account')}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Notification Bell */}
-          <Link to="/notifications" className="relative text-white hover:text-yellow-300 transition-colors duration-300">
-            <i className="fas fa-bell text-xl"></i>
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              3
-            </span>
-          </Link>
-          
           {/* Profile picture with initials fallback */}
           <div className="flex items-center">
             <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border-2 border-white/30 hover:border-yellow-300 transition-all duration-300 cursor-pointer">
@@ -234,6 +273,17 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                 >
                   Account Settings
                 </Link>
+                <Link
+                  to="/notifications"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+                >
+                  Notifications
+                  {unreadNotifications > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                      {unreadNotifications}
+                    </span>
+                  )}
+                </Link>
                 {userType === 'jobseeker' && (
                   <>
                     <Link
@@ -284,7 +334,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
             </div>
           )}
         </div>
-      )}
+      </div>
     </>
   );
 
@@ -296,7 +346,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
         onMouseLeave={handleMouseLeave}
       >
         <div className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border border-white/30 hover:border-yellow-300 transition-all duration-300 flex items-center cursor-pointer">
-          <span>User</span>
+          <span>Sign In</span>
           <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${hoveredDropdown === 'user' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
@@ -312,19 +362,74 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                 to="/login"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
               >
-                Sign In
+                <i className="fas fa-sign-in-alt mr-2"></i>Sign In
               </Link>
               <Link
                 to="/login?signup=true"
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
               >
-                Sign Up
+                <i className="fas fa-user-plus mr-2"></i>Create Account
               </Link>
             </div>
           </div>
         )}
       </div>
-      <Link to="/admin/login" className="ml-2 text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border border-white/30 hover:border-yellow-300 transition-all duration-300">
+      
+      <div 
+        className="relative mx-2"
+        onMouseEnter={() => handleMouseEnter('employers-btn')}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border border-white/30 hover:border-yellow-300 transition-all duration-300 flex items-center cursor-pointer">
+          <span>Employers</span>
+          <svg className={`ml-1 h-5 w-5 transition-transform duration-200 ${hoveredDropdown === 'employers-btn' ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+        {hoveredDropdown === 'employers-btn' && (
+          <div className="absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-200 transform origin-top-right">
+            <div className="py-1" role="menu" aria-orientation="vertical">
+              <Link
+                to="/employer/login?signup=true"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+              >
+                <i className="fas fa-user-plus mr-2"></i>Register as Employer
+              </Link>
+              <Link
+                to="/employer/login"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+              >
+                <i className="fas fa-sign-in-alt mr-2"></i>Employer Login
+              </Link>
+              <div className="border-t border-gray-100 my-1"></div>
+              <Link
+                to="/employer/post-job"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+              >
+                <i className="fas fa-plus-circle mr-2"></i>Post a Job
+              </Link>
+              <Link
+                to="/employer/post-internship"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+              >
+                <i className="fas fa-briefcase mr-2"></i>Post an Internship
+              </Link>
+              <Link
+                to="/employer/add-company"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
+              >
+                <i className="fas fa-building mr-2"></i>Add Company Profile
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <Link to="/admin/login" className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border border-white/30 hover:border-yellow-300 transition-all duration-300">
         Admin
       </Link>
     </div>
@@ -340,7 +445,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo Section - Left */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center -ml-1">
               <img className="h-10 w-auto" src="/logo.png" alt="FutureLift" />
             </Link>
           </div>
@@ -392,12 +497,17 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                       >
                         Remote Jobs
                       </Link>
-                      <Link
-                        to="/jobs/featured"
+                      <a
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection('featured-jobs');
+                          setHoveredDropdown(null);
+                        }}
                         className="block px-4 py-2 text-[14px] text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
                       >
                         Featured Jobs
-                      </Link>
+                      </a>
                       <Link
                         to="/jobs/location"
                         className="block px-4 py-2 text-[14px] text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
@@ -557,7 +667,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                 onMouseLeave={handleMouseLeave}
               >
                 <div
-                  className="relative group px-2 py-2 text-[14px] font-medium text-white hover:bg-white/10 transition-all duration-300 flex items-center cursor-pointer"
+                  className="relative group px-2 py-2 text-[14px] font-medium text-white hover:text-yellow-200 transition-all duration-300 flex items-center cursor-pointer"
                 >
                   <span className="relative z-10">Resources</span>
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
@@ -703,151 +813,23 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
           
           {/* Auth Buttons - Right */}
           <div className="hidden md:flex md:items-center md:ml-auto">
-            {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                {/* Notification Bell */}
-                <Link to="/dashboard" className="relative text-white hover:text-yellow-300 transition-colors duration-300">
-                  <i className="fas fa-bell text-xl"></i>
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    3
-                  </span>
-                </Link>
-                
-                {/* User Profile */}
-                <div 
-                  className="relative"
-                  onMouseEnter={() => handleMouseEnter('user-account')}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {/* Profile picture with initials fallback */}
-                  <div className="flex items-center">
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border-2 border-white/30 hover:border-yellow-300 transition-all duration-300 cursor-pointer shadow-md">
-                      {getUserAvatar() ? (
-                        <img 
-                          src={getUserAvatar()} 
-                          alt={userData?.name || 'User'} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-indigo-700 to-blue-800 flex items-center justify-center text-white font-bold">
-                          {getUserInitials()}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {hoveredDropdown === 'user-account' && (
-                    <div className="absolute right-0 z-10 mt-2 w-64 rounded-md shadow-lg bg-white/95 backdrop-blur-md ring-1 ring-black/5 border border-indigo-100 transition-all duration-200 transform origin-top-right">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        <div className="px-4 py-3 border-b border-gray-200">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden mr-3">
-                              {getUserAvatar() ? (
-                                <img 
-                                  src={getUserAvatar()} 
-                                  alt={userData?.name || 'User'} 
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white font-bold">
-                                  {getUserInitials()}
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <div className="font-medium text-gray-900">{userData?.name || 'User'}</div>
-                              <div className="text-xs text-gray-500">{userData?.email || ''}</div>
-                            </div>
-                          </div>
-                        </div>
-                        <Link
-                          to="/dashboard"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                        >
-                          My Dashboard
-                        </Link>
-                        <Link
-                          to="/dashboard/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                        >
-                          Profile
-                        </Link>
-                        <Link
-                          to="/account/settings"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                        >
-                          Account Settings
-                        </Link>
-                        {userType === 'jobseeker' && (
-                          <>
-                            <Link
-                              to="/jobs/applications"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                            >
-                              My Applications
-                            </Link>
-                            <Link
-                              to="/jobs/saved"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                            >
-                              Saved Jobs
-                            </Link>
-                          </>
-                        )}
-                        {userType === 'employer' && (
-                          <>
-                            <Link
-                              to="/employer/jobs"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                            >
-                              My Job Postings
-                            </Link>
-                            <Link
-                              to="/employer/applications"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                            >
-                              Received Applications
-                            </Link>
-                          </>
-                        )}
-                        <div className="border-t border-gray-200 pt-1">
-                          <Link
-                            to="/help-support"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors duration-200"
-                          >
-                            Help & Support
-                          </Link>
-                          <button
-                            onClick={logout}
-                            className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-primary-50 hover:text-red-700 transition-colors duration-200"
-                          >
-                            Log Out
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Link to="/login" className="relative group px-3 py-1.5 text-[14px] font-medium text-white hover:text-yellow-200 transition-all duration-300 border border-white/20 rounded-md hover:border-yellow-300/50">
-                  <span className="relative z-10">Login</span>
-                </Link>
-                <Link to="/login?signup=true" className="px-3 py-1.5 text-[14px] font-medium text-indigo-900 bg-gradient-to-r from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 rounded-md transition-colors duration-300">
-                  Register
-                </Link>
-                <Link to="/admin/login" className="relative group px-3 py-1.5 text-[14px] font-medium text-white hover:text-yellow-200 transition-all duration-300 border border-white/10 rounded-md">
-                  <span className="relative z-10">Admin</span>
-                </Link>
-              </div>
-            )}
+            {isAuthenticated ? authLinks : guestLinks}
           </div>
           
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center ml-auto">
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
+                {/* Logout Button for Mobile */}
+                <div className="mr-4">
+                  <button
+                    onClick={logout}
+                    className="px-3 py-1.5 text-[14px] font-medium text-white hover:text-red-300 transition-all duration-300 border border-white/20 rounded-md hover:border-red-400/50"
+                  >
+                    Logout
+                  </button>
+                </div>
+
                 {/* Notification Bell for Mobile */}
                 <div className="mr-4">
                   <Link to="/dashboard" className="relative text-white hover:text-yellow-300 transition-colors duration-300">
@@ -882,6 +864,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                       </div>
                     </div>
                    
+                    {/* Mobile dropdown content */}
                     {hoveredDropdown === 'user-account-mobile' && (
                       <div className="absolute right-0 z-10 mt-2 w-64 rounded-md shadow-lg bg-white/95 backdrop-blur-md ring-1 ring-black/5 border border-indigo-100 transition-all duration-200 transform origin-top-right">
                         <div className="py-1" role="menu" aria-orientation="vertical">
@@ -895,7 +878,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <div className="w-full h-full bg-gradient-to-br from-indigo-700 to-blue-800 flex items-center justify-center text-white font-bold">
+                                  <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white font-bold">
                                     {getUserInitials()}
                                   </div>
                                 )}
@@ -987,7 +970,7 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                   </div>
                 </div>
               </>
-            )}
+            ) : null}
             <button
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-200 focus:outline-none"
@@ -1053,13 +1036,17 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
               >
                 Remote Jobs
               </Link>
-              <Link
-                to="/jobs/featured"
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection('featured-jobs');
+                  setIsMenuOpen(false);
+                }}
                 className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
               >
                 Featured Jobs
-              </Link>
+              </a>
               <Link
                 to="/jobs/location"
                 className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
@@ -1205,6 +1192,59 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Government & PSU Companies
+              </Link>
+            </div>
+          )}
+          <button
+            onClick={() => toggleDropdown('mobile-employers')}
+            className="text-white hover:text-yellow-200 w-full text-left px-3 py-2 rounded-md text-base font-medium flex justify-between items-center border-l-2 border-transparent hover:border-yellow-300 transition-all duration-200"
+          >
+            <span>Employers</span>
+            <svg className={`h-5 w-5 transition-transform duration-200 ${activeDropdown === 'mobile-employers' ? 'rotate-180 text-yellow-300' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          {activeDropdown === 'mobile-employers' && (
+            <div className="pl-4 space-y-1 bg-indigo-800/50 backdrop-blur-sm rounded-md">
+              <Link
+                to="/employer/login?signup=true"
+                className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <i className="fas fa-user-plus mr-2"></i>Register as Employer
+              </Link>
+              <Link
+                to="/employer/login"
+                className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <i className="fas fa-building mr-2"></i>Employer Login/Register
+              </Link>
+              <div className="border-t border-gray-100 my-1"></div>
+              <Link
+                to="/employer/post-job"
+                className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <i className="fas fa-plus-circle mr-2"></i>Post a Job
+              </Link>
+              <Link
+                to="/employer/post-internship"
+                className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <i className="fas fa-briefcase mr-2"></i>Post an Internship
+              </Link>
+              <Link
+                to="/employer/add-company"
+                className="text-gray-300 hover:text-yellow-200 block px-3 py-2 rounded-md text-base font-medium border-l-2 border-transparent hover:border-yellow-300/50 transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <i className="fas fa-building mr-2"></i>Add Company Profile
               </Link>
             </div>
           )}
@@ -1356,7 +1396,12 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-white">{userData?.name || 'User'}</div>
-                    <div className="text-sm font-medium text-gray-300">{userData?.email || ''}</div>
+                    <div className="text-xs text-gray-500">{userData?.email || ''}</div>
+                    {userType === 'employer' && (
+                      <div className="text-xs mt-1 bg-blue-900 text-blue-200 px-2 py-0.5 rounded-full inline-block">
+                        <i className="fas fa-building mr-1"></i>Employer
+                      </div>
+                    )}
                   </div>
                 </div>
                 
@@ -1385,20 +1430,66 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                     </Link>
                   </>
                 )}
-                {userType !== 'admin' && (
+                {userType === 'employer' && (
                   <>
                     <Link
-                      to="/dashboard"
+                      to="/employer/dashboard"
                       className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      My Dashboard
+                      <i className="fas fa-tachometer-alt mr-2"></i>Employer Dashboard
                     </Link>
                     <Link
-                      to="/dashboard/profile"
+                      to="/employer/jobs"
                       className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
                       onClick={() => setIsMenuOpen(false)}
                     >
+                      <i className="fas fa-briefcase mr-2"></i>My Job Postings
+                    </Link>
+                    <Link
+                      to="/employer/post-job"
+                      className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <i className="fas fa-plus-circle mr-2"></i>Post New Job
+                    </Link>
+                        <Link
+                      to="/employer/post-internship"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                      <i className="fas fa-graduation-cap mr-2"></i>Post Internship
+                        </Link>
+                        <Link
+                      to="/employer/applications"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                      <i className="fas fa-clipboard-list mr-2"></i>Received Applications
+                    </Link>
+                    <Link
+                      to="/employer/add-company"
+                      className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <i className="fas fa-building mr-2"></i>Company Profile
+                        </Link>
+                      </>
+                    )}
+                {userType !== 'admin' && userType !== 'employer' && (
+                      <>
+                        <Link
+                      to="/dashboard"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                      My Dashboard
+                        </Link>
+                        <Link
+                      to="/dashboard/profile"
+                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
                       Profile
                     </Link>
                     <Link
@@ -1426,24 +1517,6 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                         </Link>
                       </>
                     )}
-                    {userType === 'employer' && (
-                      <>
-                        <Link
-                          to="/employer/jobs"
-                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          My Job Postings
-                        </Link>
-                        <Link
-                          to="/employer/applications"
-                          className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          Received Applications
-                        </Link>
-                      </>
-                    )}
                     <Link
                       to="/help-support"
                       className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
@@ -1458,34 +1531,43 @@ const Navbar = ({ isAuthenticated, logout, userType, categories = [] }) => {
                     logout();
                     setIsMenuOpen(false);
                   }}
-                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left text-red-300"
+                  className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-primary-50 hover:text-red-700 transition-colors duration-200"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
+                <div className="flex flex-col space-y-2">
                 <Link
                   to="/login"
-                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                    className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                    <i className="fas fa-sign-in-alt mr-2"></i>Login
                 </Link>
                 <Link
                   to="/login?signup=true"
-                  className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+                    className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Register
+                    <i className="fas fa-user-plus mr-2"></i>Register
+                  </Link>
+                  <Link
+                    to="/employer/login"
+                    className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <i className="fas fa-building mr-2"></i>Employer Login/Register
                 </Link>
                 <Link
                   to="/admin/login"
                   className="text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium border border-white/30"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Admin
+                    <i className="fas fa-user-shield mr-2"></i>Admin
                 </Link>
+                </div>
               </>
             )}
           </div>

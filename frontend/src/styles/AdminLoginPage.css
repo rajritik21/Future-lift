@@ -304,9 +304,18 @@ a.socialIcon:hover,
     border-color: #2ecc71;
 }
 
-/* Date input styling */
+/* Date input styling and tooltip */
+.date-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .date-input {
     color-scheme: dark;
+    width: 100%;
+    padding-right: 40px;
 }
 
 .date-input::placeholder {
@@ -331,6 +340,80 @@ a.socialIcon:hover,
     100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
 }
 
+.admin-login-box .input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.7;
+    margin-right: 30px;
+}
+
+.date-tooltip {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3498db;
+    cursor: help;
+    font-size: 18px;
+    z-index: 20;
+    background-color: rgba(30, 30, 30, 0.3);
+    padding: 5px;
+    border-radius: 50%;
+    height: 28px;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.date-tooltip:hover {
+    background-color: rgba(52, 152, 219, 0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.date-tooltip.info-right {
+    right: 10px;
+}
+
+.date-tooltip-text {
+    visibility: hidden;
+    width: 280px;
+    background-color: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 12px;
+    position: absolute;
+    z-index: 30;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -140px;
+    opacity: 0;
+    transition: all 0.3s;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    font-weight: 500;
+    border: 1px solid #3498db;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.date-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #3498db transparent transparent transparent;
+}
+
+.date-tooltip:hover .date-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
 .field-instruction {
     position: absolute;
     right: 10px;
@@ -346,23 +429,6 @@ a.socialIcon:hover,
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     animation: fadeInDown 0.3s ease-out;
     white-space: nowrap;
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 0.9;
-        transform: translateY(0);
-    }
-}
-
-.admin-login-box .input-group input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-    opacity: 0.7;
 }
 
 /* Password toggle */
@@ -536,4 +602,41 @@ a.socialIcon:hover,
 
 .admin-login-box form {
     animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom Date Input Styling */
+.admin-login-box .input-group .date-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.admin-login-box .input-group input[type="date"].date-input {
+    width: 100%;
+    padding-right: 40px;
+    color-scheme: dark;
+}
+
+.admin-login-box .input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.7;
+    margin-right: 30px;
+}
+
+/* Ensure tooltip is properly positioned */
+.admin-login-box .input-group .date-tooltip {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+}
+
+.admin-login-box .input-group .date-tooltip-text {
+    width: 280px;
+    margin-left: -140px;
+    font-size: 0.8rem;
+    line-height: 1.5;
 } 

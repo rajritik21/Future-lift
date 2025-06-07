@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useScrollToSection from '../../hooks/useScrollToSection';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const scrollToSection = useScrollToSection();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -96,12 +98,14 @@ const Footer = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           {/* Logo and Description */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 pr-6">
             <div className="flex items-center mb-2 group relative">
-              <img src="/logo.png" alt="FutureLift" className="h-12 w-auto mr-2 transition-all duration-500 hover:scale-110" />
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400 group-hover:w-full transition-all duration-500"></div>
+              <Link to="/">
+                <img src="/logo.png" alt="FutureLift" className="h-12 w-auto mr-2 transition-all duration-500 hover:scale-110" />
+                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400 group-hover:w-full transition-all duration-500"></div>
+              </Link>
             </div>
             <p className="text-white/80 mb-2 leading-relaxed text-sm">
               Your Gateway to Opportunities! Navigate Your Next Career Move with FutureLift.
@@ -172,7 +176,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <h3 className="text-base font-semibold text-white mb-2 relative inline-block">
               Quick Links
               <span className="absolute bottom-0 left-0 w-10 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400"></span>
@@ -191,10 +195,17 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/jobs/featured" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                <a 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('featured-jobs');
+                  }}
+                  className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm"
+                >
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Featured Jobs</span>
-                </Link>
+                </a>
               </li>
               <li>
                 <Link to="/contact" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
@@ -218,34 +229,22 @@ const Footer = () => {
           </div>
 
           {/* Job Seekers */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 md:pl-4">
             <h3 className="text-base font-semibold text-white mb-2 relative inline-block">
               Job Seekers
               <span className="absolute bottom-0 left-0 w-10 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400"></span>
             </h3>
             <ul className="space-y-1">
               <li>
-                <Link to="/profile/create" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                <Link to="/login" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Create Profile</span>
                 </Link>
               </li>
               <li>
-                <Link to="/jobs/search" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                <Link to="/#hero-section" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
                   <span>Job Search</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
-                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>FAQ</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs/government" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
-                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>Government Jobs</span>
                 </Link>
               </li>
               <li>
@@ -254,11 +253,35 @@ const Footer = () => {
                   <span>Resume Tips</span>
                 </Link>
               </li>
+              <li>
+                <Link to="/resources/interview-tips" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>Interview Tips</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/resources/aptitude-practice" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>Aptitude Practice</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/resources/career-guidance" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>Career Advice</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
+                  <span>FAQ</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Employers */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 md:pl-4">
             <h3 className="text-base font-semibold text-white mb-2 relative inline-block">
               Employers
               <span className="absolute bottom-0 left-0 w-10 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-400"></span>
@@ -271,9 +294,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/employers/profile" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                <Link to="/internships/post" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>Company Profile</span>
+                  <span>Post an Internship</span>
                 </Link>
               </li>
               <li>
@@ -283,15 +306,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/pricing" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
+                <Link to="/employers/profile" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
                   <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>Pricing Plans</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/companies/startups" className="text-white/70 hover:text-yellow-300 transition-all duration-300 flex items-center group text-sm">
-                  <span className="w-0 h-0.5 bg-yellow-300 mr-0 group-hover:w-2 group-hover:mr-1 transition-all duration-300"></span>
-                  <span>For Startups</span>
+                  <span>Company Profile</span>
                 </Link>
               </li>
             </ul>

@@ -41,6 +41,14 @@ const UserSchema = new mongoose.Schema({
     enum: ['jobseeker', 'employer', 'admin'],
     default: 'jobseeker'
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: true
+  },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   adminRole: {
     type: String,
     enum: ['super_admin', 'team_member'],

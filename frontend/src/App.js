@@ -41,19 +41,26 @@ import AdminProfilePage from './pages/AdminProfilePage';
 import AdminInternshipsPage from './pages/AdminInternshipsPage';
 import AdminCategoriesPage from './pages/AdminCategoriesPage';
 import UserLoginPage from './pages/UserLoginPage';
+import EmployerLoginPage from './pages/EmployerLoginPage';
 import AccountSettingsPage from './pages/AccountSettingsPage';
 import HelpSupportPage from './pages/HelpSupportPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import NotificationsPage from './pages/NotificationsPage';
+import ScrollToTop from './components/utils/ScrollToTop';
+
+// Import AuthContext
+import { useAuth } from './context/AuthContext';
 
 // Private route component for protected routes
 const PrivateRoute = ({ element, allowedUserTypes }) => {
-  const isAuthenticated = localStorage.getItem('token') !== null || localStorage.getItem('user') !== null;
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const { isAuthenticated, currentUser } = useAuth();
   
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   
-  if (allowedUserTypes && !allowedUserTypes.includes(user.userType)) {
+  if (allowedUserTypes && !allowedUserTypes.includes(currentUser?.userType)) {
     return <Navigate to="/" replace />;
   }
   
@@ -61,38 +68,11 @@ const PrivateRoute = ({ element, allowedUserTypes }) => {
 };
 
 const App = () => {
-  const [auth, setAuth] = useState({
-    isAuthenticated: false,
-    user: null,
-    loading: true
-  });
+  const { isAuthenticated, currentUser, logout } = useAuth();
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored token and user info
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
-      const userString = localStorage.getItem('user');
-      if (token || userString) {
-        // Here you would normally validate the token with the backend
-        const user = JSON.parse(userString || '{}');
-        setAuth({
-          isAuthenticated: true,
-          user,
-          loading: false
-        });
-      } else {
-        setAuth({
-          isAuthenticated: false,
-          user: null,
-          loading: false
-        });
-      }
-    };
-
-    checkAuth();
-    
     // Load categories from API
     const loadCategories = async () => {
       try {
@@ -123,17 +103,7 @@ const App = () => {
     };
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setAuth({
-      isAuthenticated: false,
-      user: null,
-      loading: false
-    });
-  };
-
-  if (auth.loading || categoriesLoading) {
+  if (categoriesLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
@@ -143,11 +113,12 @@ const App = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Navbar 
-          isAuthenticated={auth.isAuthenticated} 
+          isAuthenticated={isAuthenticated} 
           logout={logout} 
-          userType={auth.user?.userType} 
+          userType={currentUser?.userType} 
           categories={categories}
         />
         
@@ -170,7 +141,11 @@ const App = () => {
             
             {/* Auth Routes */}
             <Route path="/login" element={<UserLoginPage />} />
+            <Route path="/employer/login" element={<EmployerLoginPage />} />
             <Route path="/register" element={<Navigate to="/login?signup=true" replace />} />
+            <Route path="/employer/register" element={<Navigate to="/employer/login?signup=true" replace />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/auth" element={<Navigate to="/login" replace />} />
             
             {/* Admin Auth Routes */}
@@ -188,7 +163,8 @@ const App = () => {
             <Route path="/resources/free-courses" element={<FreeCoursesPage />} />
             <Route path="/resources/webinars-events" element={<WebinarsEventsPage />} />
             
-            {/* Account Settings & Help */}
+            {/* User Account Routes */}
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route 
               path="/account/settings" 
               element={
@@ -285,7 +261,8 @@ const App = () => {
               } 
             />
             
-            {/* Add more routes as needed */}
+            {/* Catch all - 404 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
         

@@ -35,6 +35,29 @@ router.post(
 // @access  Private
 router.get('/', isAuthenticated, authController.getCurrentUser);
 
+// @route   POST api/auth/forgot-password
+// @desc    Request password reset email
+// @access  Public
+router.post(
+  '/forgot-password',
+  [
+    check('email', 'Please include a valid email').isEmail()
+  ],
+  authController.forgotPassword
+);
+
+// @route   POST api/auth/reset-password
+// @desc    Reset password with token
+// @access  Public
+router.post(
+  '/reset-password',
+  [
+    check('token', 'Token is required').not().isEmpty(),
+    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+  ],
+  authController.resetPassword
+);
+
 // @route   POST api/auth/admin/register
 // @desc    Register an admin user
 // @access  Public

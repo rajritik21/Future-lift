@@ -465,4 +465,43 @@ exports.getDashboardStats = async (req, res) => {
       message: "Error fetching dashboard statistics: " + error.message
     });
   }
+};
+
+// Remove all admin users (special function for resetting admin accounts)
+exports.removeAllAdmins = async (req, res) => {
+  try {
+    // Find all admin users
+    const adminUsers = await User.find({ 
+      $or: [
+        { userType: 'admin' },
+        { role: 'admin' }
+      ]
+    }).select('name email');
+    
+    if (adminUsers.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No admin users found to remove"
+      });
+    }
+    
+    // Delete all admin users
+    const result = await User.deleteMany({ 
+      $or: [
+        { userType: 'admin' },
+        { role: 'admin' }
+      ]
+    });
+    
+    res.status(200).json({
+      success: true,
+      message: `Successfully removed ${result.deletedCount} admin user(s)`,
+      removedAdmins: adminUsers
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error removing admin users: " + error.message
+    });
+  }
 }; 

@@ -155,7 +155,7 @@ const HomePage = () => {
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section" id="hero-section">
         {/* Background decorative elements */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -180,7 +180,7 @@ const HomePage = () => {
             </p>
             
             <div className="mt-12 w-full max-w-3xl mx-auto">
-              <div className="flex rounded-xl overflow-hidden shadow-xl bg-white/10 backdrop-blur-lg border border-white/20">
+              <div className="flex rounded-xl overflow-hidden shadow-xl bg-white/10 backdrop-blur-lg">
                 <div className="relative flex-grow">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i className="fas fa-search text-gray-400"></i>
@@ -191,7 +191,7 @@ const HomePage = () => {
                     placeholder="Job title, company, or keywords"
                   />
                 </div>
-                <div className="relative inline-flex items-center border-l border-gray-700/30">
+                <div className="relative inline-flex items-center">
                   <select className="h-full py-5 pl-4 pr-10 border-0 bg-transparent text-white font-medium appearance-none focus:outline-none focus:ring-0">
                     <option className="bg-gray-900 text-white">All Locations</option>
                     <option className="bg-gray-900 text-white">Remote</option>
@@ -261,21 +261,21 @@ const HomePage = () => {
               <Link 
                 to={`/jobs/category/${category.id}`} 
                 key={category.id}
-                className="category-card animated-card rounded-lg p-4 transition-all duration-300 transform hover:-translate-y-1 group"
+                className="category-card animated-card rounded-lg p-5 transition-all duration-300 transform hover:-translate-y-1 group"
               >
-                <div className="h-14 w-14 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center mb-3 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
-                  <i className={`${category.icon} text-xl`}></i>
+                <div className="h-16 w-16 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center mb-4 mx-auto shadow-md group-hover:bg-primary-600 group-hover:text-white group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <i className={`${category.icon} text-2xl`}></i>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 text-center group-hover:text-primary-600 transition-colors duration-300">
+                <h3 className="text-lg font-semibold text-gray-900 text-center group-hover:text-primary-600 transition-colors duration-300">
                   {category.name}
                 </h3>
                 <p className="mt-1 text-xs text-gray-500 text-center">
                   {category.jobCount} Jobs Available
                 </p>
-                <div className="view-jobs text-primary-600 text-sm">
-                  <span className="flex items-center">
+                <div className="view-jobs text-primary-600 text-sm mt-2 text-center">
+                  <span className="inline-flex items-center">
                     View Jobs 
-                    <i className="fas fa-arrow-right ml-1 text-xs"></i>
+                    <i className="fas fa-arrow-right ml-1 group-hover:ml-2 transition-all duration-300"></i>
                   </span>
                 </div>
               </Link>
@@ -285,7 +285,7 @@ const HomePage = () => {
           <div className="mt-10 text-center">
             <Link
               to="/jobs/categories"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
+              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
             >
               View All Categories
               <i className="fas fa-chevron-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
@@ -299,32 +299,32 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-primary-100 text-primary-600 mb-4">
-                <i className="fas fa-briefcase text-2xl"></i>
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-primary-100 text-primary-600 mb-4 mx-auto shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110">
+                <i className="fas fa-briefcase text-3xl"></i>
               </div>
               <div className="text-4xl font-bold text-primary-600 mb-1">1,000+</div>
               <div className="text-lg font-medium text-gray-600">Active Job Listings</div>
             </div>
             
             <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-yellow-100 text-yellow-600 mb-4">
-                <i className="fas fa-building text-2xl"></i>
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 text-yellow-600 mb-4 mx-auto shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110">
+                <i className="fas fa-building text-3xl"></i>
               </div>
               <div className="text-4xl font-bold text-yellow-600 mb-1">500+</div>
               <div className="text-lg font-medium text-gray-600">Companies</div>
             </div>
             
             <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-green-100 text-green-600 mb-4">
-                <i className="fas fa-users text-2xl"></i>
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-4 mx-auto shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110">
+                <i className="fas fa-users text-3xl"></i>
               </div>
               <div className="text-4xl font-bold text-green-600 mb-1">10,000+</div>
               <div className="text-lg font-medium text-gray-600">Registered Job Seekers</div>
             </div>
             
             <div className="animated-card overflow-hidden rounded-lg p-6 text-center">
-              <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-indigo-100 text-indigo-600 mb-4">
-                <i className="fas fa-check-circle text-2xl"></i>
+              <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mb-4 mx-auto shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110">
+                <i className="fas fa-check-circle text-3xl"></i>
               </div>
               <div className="text-4xl font-bold text-indigo-600 mb-1">85%</div>
               <div className="text-lg font-medium text-gray-600">Success Rate</div>
@@ -334,7 +334,7 @@ const HomePage = () => {
       </section>
 
       {/* Latest Jobs */}
-      <section className="py-16 gradient-bg-teal animated-bg">
+      <section className="py-16 gradient-bg-teal animated-bg" id="featured-jobs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -352,8 +352,8 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-purple-100 rounded flex items-center justify-center text-purple-600 flex-shrink-0">
-                      <i className="fas fa-greater-than"></i>
+                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 flex-shrink-0 shadow-md">
+                      <i className="fas fa-greater-than text-xl"></i>
                     </div>
                     <div className="ml-3">
                       <h3 className="text-gray-900 font-medium text-lg">Software Development...</h3>
@@ -367,15 +367,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Bengaluru</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Software Development</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">0-2 year(s)</span>
                   </div>
                 </div>
@@ -392,7 +392,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/1" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/1" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -403,8 +403,8 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center text-blue-600 flex-shrink-0">
-                      <i className="fas fa-circle"></i>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 flex-shrink-0 shadow-md">
+                      <i className="fas fa-circle text-xl"></i>
                     </div>
                     <div className="ml-3">
                       <h3 className="text-gray-900 font-medium text-lg">DevOps Engineer</h3>
@@ -418,15 +418,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Bangalore, Pune</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">DevOps</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">1+ year</span>
                   </div>
                 </div>
@@ -443,7 +443,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/2" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/2" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -454,7 +454,7 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-yellow-100 rounded flex items-center justify-center text-gray-800 font-bold flex-shrink-0">
+                    <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-gray-800 font-bold flex-shrink-0 shadow-md">
                       EY
                     </div>
                     <div className="ml-3">
@@ -469,15 +469,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">India</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Software Engineer</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Fresher</span>
                   </div>
                 </div>
@@ -493,7 +493,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/3" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/3" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -504,7 +504,7 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-100 shadow-md">
                       <img src="https://logo.clearbit.com/google.com" alt="Google" className="w-full h-full object-contain" />
                     </div>
                     <div className="ml-3">
@@ -519,15 +519,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Hyderabad, Telangana, India</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Software Engineer</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">4+ years</span>
                   </div>
                 </div>
@@ -543,7 +543,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/4" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/4" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -554,7 +554,7 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-100 shadow-md">
                       <img src="https://logo.clearbit.com/amazon.com" alt="Amazon" className="w-full h-full object-contain" />
                     </div>
                     <div className="ml-3">
@@ -569,15 +569,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Remote</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Software Development Engineer</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">3+ years</span>
                   </div>
                 </div>
@@ -594,7 +594,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/5" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/5" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -605,7 +605,7 @@ const HomePage = () => {
               <div className="p-6">
                 <div className="flex justify-between mb-5">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-100 shadow-md">
                       <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" className="w-full h-full object-contain" />
                     </div>
                     <div className="ml-3">
@@ -620,15 +620,15 @@ const HomePage = () => {
 
                 <div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                    <i className="fas fa-map-marker-alt text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">India</span>
                   </div>
                   <div className="flex items-center mb-2">
-                    <i className="fas fa-briefcase text-gray-400 w-4"></i>
+                    <i className="fas fa-briefcase text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Software Engineer</span>
                   </div>
                   <div className="flex items-center">
-                    <i className="fas fa-clock text-gray-400 w-4"></i>
+                    <i className="fas fa-clock text-gray-400 w-5 text-lg"></i>
                     <span className="ml-2 text-gray-600 text-sm">Fresher</span>
                   </div>
                 </div>
@@ -644,7 +644,7 @@ const HomePage = () => {
                 </div>
                 
                 <div className="mt-5 flex gap-2">
-                  <Link to="/jobs/6" className="text-center border border-gray-300 rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
+                  <Link to="/jobs/6" className="text-center rounded px-4 py-2 text-gray-700 font-medium text-sm flex-1 hover:bg-gray-50">View Details</Link>
                   <Link to="#" className="text-center bg-primary-600 hover:bg-primary-700 rounded px-4 py-2 text-white font-medium text-sm flex-1">Apply Now</Link>
                 </div>
               </div>
@@ -657,8 +657,8 @@ const HomePage = () => {
       <section className="py-16 gradient-bg-teal animated-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900">Top Companies Trust Us</h2>
-            <p className="mt-2 text-lg text-gray-500">Leading employers seeking outstanding talent like you</p>
+            <h2 className="text-3xl font-extrabold text-gray-900">Dream Companies Hiring</h2>
+            <p className="mt-2 text-lg text-gray-500">Your chance to join these top global tech giants and build your dream career</p>
           </div>
           
           <div className="logo-scroll-container relative max-w-6xl mx-auto overflow-hidden px-4">
@@ -741,7 +741,7 @@ const HomePage = () => {
                     <img 
                       src="https://randomuser.me/api/portraits/men/32.jpg" 
                       alt="John Doe" 
-                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                      className="h-14 w-14 rounded-full object-cover"
                     />
                     <div className="ml-4">
                       <h3 className="text-lg font-semibold">John Doe</h3>
@@ -766,7 +766,7 @@ const HomePage = () => {
                     <img 
                       src="https://randomuser.me/api/portraits/women/44.jpg" 
                       alt="Jane Smith" 
-                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                      className="h-14 w-14 rounded-full object-cover"
                     />
                     <div className="ml-4">
                       <h3 className="text-lg font-semibold">Jane Smith</h3>
@@ -791,7 +791,7 @@ const HomePage = () => {
                     <img 
                       src="https://randomuser.me/api/portraits/men/67.jpg" 
                       alt="Michael Johnson" 
-                      className="h-14 w-14 rounded-full object-cover border-2 border-primary-500"
+                      className="h-14 w-14 rounded-full object-cover"
                     />
                     <div className="ml-4">
                       <h3 className="text-lg font-semibold">Michael Johnson</h3>
@@ -848,12 +848,12 @@ const HomePage = () => {
             <div className="mt-8 lg:mt-0">
               <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
                 <div className="inline-flex rounded-md shadow">
-                  <Link to="/login?signup=true" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
+                  <Link to="/login?signup=true" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-md text-primary-700 bg-white hover:bg-gray-100 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
                     Get Started
                   </Link>
                 </div>
                 <div className="inline-flex rounded-md shadow">
-                  <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
+                  <Link to="/about" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-800 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg">
                     Learn More
                   </Link>
                 </div>
@@ -862,7 +862,7 @@ const HomePage = () => {
           </div>
           
           {/* Subscription Form */}
-          <div className="mt-10 border-t border-primary-600/50 pt-8">
+          <div className="mt-10 pt-8">
             {subscribeSuccess ? (
               <div className="bg-primary-800/50 backdrop-blur-sm rounded-lg p-6 text-center">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
@@ -891,7 +891,7 @@ const HomePage = () => {
                 </p>
                 <button 
                   onClick={() => setAlreadySubscribed(false)} 
-                  className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none"
+                  className="mt-2 inline-flex items-center px-4 py-2 rounded-md shadow-sm text-sm font-medium text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none"
                 >
                   Try Different Email
                 </button>
@@ -906,7 +906,7 @@ const HomePage = () => {
                       name="skills"
                       type="text"
                       required
-                      className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
+                      className="w-full px-5 py-3 placeholder-gray-500 focus:ring-0 focus:outline-none rounded-md shadow-sm"
                       placeholder="Enter your skills (e.g. JavaScript, React, UX Design)"
                       value={subscription.skills}
                       onChange={handleSubscriptionChange}
@@ -919,7 +919,7 @@ const HomePage = () => {
                       name="email"
                       type="email"
                       required
-                      className="w-full px-5 py-3 border border-transparent placeholder-gray-500 focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-300 rounded-md shadow-sm"
+                      className="w-full px-5 py-3 placeholder-gray-500 focus:ring-0 focus:outline-none rounded-md shadow-sm"
                       placeholder="Enter your email"
                       value={subscription.email}
                       onChange={handleSubscriptionChange}
@@ -928,14 +928,14 @@ const HomePage = () => {
                   <div className="mt-3 sm:mt-0 sm:ml-3">
                     <button
                       type="submit"
-                      className="w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-yellow-400 transition-all duration-300 transform hover:scale-105"
+                      className="w-full flex items-center justify-center px-5 py-3 text-base font-medium rounded-md text-primary-700 bg-yellow-300 hover:bg-yellow-400 focus:outline-none focus:ring-0 transition-all duration-300 transform hover:scale-105"
                     >
                       <i className="fas fa-bell mr-2"></i> Subscribe
                     </button>
                   </div>
                 </form>
                 {subscribeError && (
-                  <div className="mt-3 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                  <div className="mt-3 bg-red-100 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <span className="block sm:inline">{subscribeError}</span>
                   </div>
                 )}

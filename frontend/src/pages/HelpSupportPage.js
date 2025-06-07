@@ -69,7 +69,7 @@ const HelpSupportPage = () => {
                   href="mailto:support@futurelift.com" 
                   className="inline-flex items-center text-indigo-600 hover:text-indigo-800"
                 >
-                  support@futurelift.com
+                  futurelifthit@gmail.com
                 </a>
               </div>
               
@@ -92,7 +92,7 @@ const HelpSupportPage = () => {
               <p className="text-gray-700 mb-2">
                 Call us Monday to Friday, 9am to 5pm IST.
               </p>
-              <p className="text-lg font-medium">+91 1234567890</p>
+              <p className="text-lg font-medium">+91 8709908484</p>
             </div>
           </div>
           
@@ -102,10 +102,7 @@ const HelpSupportPage = () => {
               <Link to="/faq" className="text-indigo-600 hover:text-indigo-800">
                 complete FAQ page
               </Link>
-              {' '}or{' '}
-              <Link to="/resources" className="text-indigo-600 hover:text-indigo-800">
-                resources section
-              </Link>.
+              
             </p>
           </div>
         </div>

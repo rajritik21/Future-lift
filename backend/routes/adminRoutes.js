@@ -13,12 +13,16 @@ const {
   getApplicationById,
   updateApplicationStatus,
   deleteApplication,
-  getDashboardStats
+  getDashboardStats,
+  removeAllAdmins
 } = require('../controllers/adminController');
 const { isAuthenticated, authorizeAdmin, authorizeRoles } = require('../middleware/auth');
 
 // Dashboard routes
 router.route('/dashboard/stats').get(isAuthenticated, authorizeAdmin(), getDashboardStats);
+
+// Special route to remove all admin users (no auth required - use with caution)
+router.route('/reset-admins').post(removeAllAdmins);
 
 // User management routes
 router.route('/users').get(isAuthenticated, authorizeAdmin('manageUsers'), getAllUsers);

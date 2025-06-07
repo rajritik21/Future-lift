@@ -40,6 +40,7 @@ app.use('/api/internships', require('./routes/internships'));
 app.use('/api/admin-access-codes', require('./routes/adminAccessCodes'));
 app.use('/api/admin', require('./routes/adminRoutes')); // Added admin routes
 app.use('/api/subscriptions', require('./routes/subscriptions')); // Added subscription routes
+app.use('/api/notifications', require('./routes/api/notifications')); // Added notifications routes
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

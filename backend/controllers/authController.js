@@ -5,6 +5,9 @@ const User = require('../models/User');
 const AdminAccessCode = require('../models/AdminAccessCode');
 const mongoose = require('mongoose');
 const fileUpload = require('../utils/fileUpload');
+const emailService = require('../utils/emailService');
+const tokenGenerator = require('../utils/tokenGenerator');
+const notificationService = require('../utils/notificationService');
 
 // Get JWT_SECRET from server config
 const JWT_SECRET = process.env.JWT_SECRET || 'futureliftjobportalsecret';
@@ -18,12 +21,22 @@ exports.registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, userType, avatar } = req.body;
+  const { name, email, password, userType, avatar, dob, mobile } = req.body;
 
   try {
-    // Check if user already exists
+    console.log('Registration attempt for:', email);
+    console.log('Data received:', { 
+      name, 
+      email, 
+      dob: dob || 'Not provided',
+      userType: userType || 'jobseeker',
+      mobile: mobile || 'Not provided'
+    });
+    
+    // Check if user exists
     let user = await User.findOne({ email });
     if (user) {
+      console.log('Registration failed: User already exists');
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
 
@@ -46,13 +59,36 @@ exports.registerUser = async (req, res) => {
       }
     }
 
-    // Create new user
+    // Handle date of birth formatting
+    let formattedDob = null;
+    if (dob) {
+      try {
+        // Ensure proper date format
+        formattedDob = new Date(dob);
+        if (isNaN(formattedDob.getTime())) {
+          console.error("Invalid date format received:", dob);
+          return res.status(400).json({ 
+            errors: [{ msg: 'Invalid date format for date of birth' }] 
+          });
+        }
+      } catch (dateError) {
+        console.error("Date parsing error:", dateError);
+        return res.status(400).json({ 
+          errors: [{ msg: 'Invalid date format for date of birth' }] 
+        });
+      }
+    }
+
+    // Create new user - no email verification required
     user = new User({
       name,
       email,
       password,
+      mobile: mobile || undefined,
       userType: userType || 'jobseeker', // Default to jobseeker if not specified
-      avatar: avatarData
+      dob: formattedDob,
+      avatar: avatarData,
+      isEmailVerified: true // Always set to true - no verification needed
     });
 
     // Hash password
@@ -61,6 +97,16 @@ exports.registerUser = async (req, res) => {
 
     // Save user
     await user.save();
+    console.log('User successfully registered:', user.id);
+
+    // Create welcome notification
+    try {
+      await notificationService.sendWelcomeNotification(user.id, user.name);
+      console.log('Welcome notification created for user:', user.id);
+    } catch (notificationError) {
+      console.error('Failed to create welcome notification:', notificationError);
+      // Continue with registration even if notification creation fails
+    }
 
     // Create JWT payload
     const payload = {
@@ -76,7 +122,12 @@ exports.registerUser = async (req, res) => {
       JWT_SECRET,
       { expiresIn: '7d' },
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          console.error('JWT signing error:', err);
+          throw err;
+        }
+        
+        console.log('Registration complete, returning success response');
         res.json({ 
           token,
           user: {
@@ -84,14 +135,27 @@ exports.registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             userType: user.userType,
-            avatar: user.avatar.url
-          }
+            avatar: user.avatar.url,
+            isEmailVerified: true
+          },
+          message: 'Registration successful! You can now login to your account.'
         });
       }
     );
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    console.error('Server error during registration:', err.message);
+    if (err.name === 'ValidationError') {
+      // Mongoose validation error
+      const validationErrors = Object.values(err.errors).map(error => ({
+        field: error.path,
+        msg: error.message
+      }));
+      return res.status(400).json({ errors: validationErrors });
+    }
+    res.status(500).json({ 
+      errors: [{ msg: 'Server error during registration' }],
+      details: err.message
+    });
   }
 };
 
@@ -140,7 +204,8 @@ exports.loginUser = async (req, res) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            userType: user.userType
+            userType: user.userType,
+            isEmailVerified: true
           }
         });
       }
@@ -480,6 +545,203 @@ exports.registerAdminBypass = async (req, res) => {
     res.status(500).json({ 
       errors: [{ msg: 'Server error during registration' }],
       errorDetail: err.message
+    });
+  }
+};
+
+// @desc    Verify email address
+// @route   GET /api/auth/verify-email/:token
+// @access  Public
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    
+    // Hash the token from the URL
+    const hashedToken = tokenGenerator.hashToken(token);
+    
+    // Find user with this token that hasn't expired
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({ 
+        errors: [{ msg: 'Invalid or expired verification token. Please request a new one.' }] 
+      });
+    }
+    
+    // Mark email as verified and remove token
+    user.isEmailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    
+    await user.save();
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Email verified successfully! You can now login to your account.' 
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// @desc    Resend verification email
+// @route   POST /api/auth/resend-verification
+// @access  Public
+exports.resendVerificationEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ errors: [{ msg: 'Email is required' }] });
+    }
+    
+    // Find user by email
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: 'User not found' }] });
+    }
+    
+    if (user.isEmailVerified) {
+      return res.status(400).json({ errors: [{ msg: 'Email is already verified' }] });
+    }
+    
+    // Generate new verification token
+    const { token, hashedToken } = tokenGenerator.generateToken();
+    
+    // Set token expiration (24 hours from now)
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 24);
+    
+    // Update user with new token
+    user.emailVerificationToken = hashedToken;
+    user.emailVerificationExpires = tokenExpiration;
+    
+    await user.save();
+    
+    // Send verification email
+    await emailService.sendVerificationEmail(
+      user.email,
+      user.name,
+      token
+    );
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Verification email has been sent. Please check your inbox.' 
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// @desc    Forgot Password - Send reset email
+// @route   POST /api/auth/forgot-password
+// @access  Public
+exports.forgotPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email } = req.body;
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      // For security reasons, still return success even if email doesn't exist
+      return res.status(200).json({ 
+        success: true, 
+        message: 'If your email is registered, you will receive a password reset link shortly.' 
+      });
+    }
+    
+    // Generate reset token
+    const { token, hashedToken } = tokenGenerator.generateToken();
+    
+    // Set token expiration (1 hour from now)
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 1);
+    
+    // Save token to user
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = tokenExpiration;
+    
+    await user.save();
+    
+    // Send password reset email
+    await emailService.sendPasswordResetEmail(
+      user.email,
+      user.name,
+      token
+    );
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'If your email is registered, you will receive a password reset link shortly.' 
+    });
+  } catch (err) {
+    console.error('Forgot password error:', err.message);
+    res.status(500).json({ 
+      errors: [{ msg: 'Server error during password reset request' }],
+      details: err.message
+    });
+  }
+};
+
+// @desc    Reset Password with token
+// @route   POST /api/auth/reset-password
+// @access  Public
+exports.resetPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { token, password } = req.body;
+
+  try {
+    // Hash the token from the URL
+    const hashedToken = tokenGenerator.hashToken(token);
+    
+    // Find user with this token that hasn't expired
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({ 
+        errors: [{ msg: 'Invalid or expired reset token. Please request a new one.' }] 
+      });
+    }
+    
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    
+    // Clear reset token fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    
+    await user.save();
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Password has been reset successfully. You can now log in with your new password.' 
+    });
+  } catch (err) {
+    console.error('Reset password error:', err.message);
+    res.status(500).json({ 
+      errors: [{ msg: 'Server error during password reset' }],
+      details: err.message
     });
   }
 }; 

@@ -26,7 +26,8 @@ const FreeCoursesPage = () => {
       description: 'Free with audit / financial aid. Courses from top universities like Stanford, Google, Meta, IBM.',
       link: 'https://www.coursera.org/courses?query=free',
       categories: ['Tech', 'Business', 'Science', 'Arts', 'Health'],
-      highlight: 'Financial aid available for certificates'
+      highlight: 'Financial aid available for certificates',
+      color: 'from-blue-500 to-blue-700'
     },
     {
       id: 2,
@@ -34,7 +35,8 @@ const FreeCoursesPage = () => {
       description: 'Free to audit, pay for certificate. Harvard, MIT, Microsoft – strong academic focus.',
       link: 'https://www.edx.org/search?tab=course',
       categories: ['Computer Science', 'Business', 'Engineering', 'Humanities'],
-      highlight: 'University-grade courses'
+      highlight: 'University-grade courses',
+      color: 'from-red-500 to-red-700'
     },
     {
       id: 3,
@@ -42,7 +44,8 @@ const FreeCoursesPage = () => {
       description: 'Often offers free coupons. Variety of tech & non-tech courses – search for free ones.',
       link: 'https://www.udemy.com/courses/free/',
       categories: ['Development', 'IT', 'Business', 'Design', 'Marketing'],
-      highlight: 'Wide variety of practical skills'
+      highlight: 'Wide variety of practical skills',
+      color: 'from-purple-500 to-purple-700'
     },
     {
       id: 4,
@@ -50,7 +53,8 @@ const FreeCoursesPage = () => {
       description: 'Free certifications on digital marketing, career skills, etc.',
       link: 'https://learndigital.withgoogle.com/digitalgarage/',
       categories: ['Digital Marketing', 'Career Development', 'Data'],
-      highlight: 'Google-recognized certificates'
+      highlight: 'Google-recognized certificates',
+      color: 'from-blue-400 to-blue-600'
     },
     {
       id: 5,
@@ -58,7 +62,8 @@ const FreeCoursesPage = () => {
       description: '1-month free trial. Career development, tech, soft skills.',
       link: 'https://www.linkedin.com/learning/',
       categories: ['Software', 'Business', 'Creative'],
-      highlight: 'Certificates display on LinkedIn profile'
+      highlight: 'Certificates display on LinkedIn profile',
+      color: 'from-blue-600 to-blue-800'
     },
     {
       id: 6,
@@ -66,7 +71,8 @@ const FreeCoursesPage = () => {
       description: '100% free. Tech-focused courses with certifications – ideal for students.',
       link: 'https://infyspringboard.onwingspan.com/web/en/page/home',
       categories: ['Programming', 'Cloud', 'Cybersecurity'],
-      highlight: 'Industry-aligned tech content'
+      highlight: 'Industry-aligned tech content',
+      color: 'from-green-500 to-green-700'
     },
     {
       id: 7,
@@ -74,7 +80,8 @@ const FreeCoursesPage = () => {
       description: 'Free IT and software courses with certificates.',
       link: 'https://www.mygreatlearning.com/academy',
       categories: ['Data Science', 'Cloud', 'AI/ML', 'Programming'],
-      highlight: 'Focused on in-demand tech skills'
+      highlight: 'Focused on in-demand tech skills',
+      color: 'from-indigo-500 to-indigo-700'
     },
     {
       id: 8,
@@ -82,7 +89,8 @@ const FreeCoursesPage = () => {
       description: 'Government of India initiative – courses from IITs & IISc.',
       link: 'https://swayam.gov.in/NPTEL',
       categories: ['Engineering', 'Science', 'Management', 'Humanities'],
-      highlight: 'Government-recognized certificates'
+      highlight: 'Government-recognized certificates',
+      color: 'from-orange-500 to-orange-700'
     },
     {
       id: 9,
@@ -90,7 +98,8 @@ const FreeCoursesPage = () => {
       description: 'UK-based – free short courses and upgrade options.',
       link: 'https://www.futurelearn.com/courses',
       categories: ['Business', 'Healthcare', 'Science', 'Teaching'],
-      highlight: 'Short courses from UK universities'
+      highlight: 'Short courses from UK universities',
+      color: 'from-pink-500 to-pink-700'
     },
     {
       id: 10,
@@ -98,7 +107,8 @@ const FreeCoursesPage = () => {
       description: 'Free certificates on business, tech, language, etc.',
       link: 'https://alison.com/',
       categories: ['IT', 'Business', 'Health', 'Languages'],
-      highlight: 'Diploma and certificate courses'
+      highlight: 'Diploma and certificate courses',
+      color: 'from-green-600 to-green-800'
     },
     {
       id: 11,
@@ -106,7 +116,8 @@ const FreeCoursesPage = () => {
       description: 'Basic subjects – good for beginners (not certification-focused).',
       link: 'https://www.khanacademy.org/',
       categories: ['Math', 'Science', 'Computing', 'Economics'],
-      highlight: 'Great for fundamentals'
+      highlight: 'Great for fundamentals',
+      color: 'from-teal-500 to-teal-700'
     },
     {
       id: 12,
@@ -114,7 +125,8 @@ const FreeCoursesPage = () => {
       description: 'Free learning paths with certificates.',
       link: 'https://www.simplilearn.com/skillup-free-online-courses',
       categories: ['Digital Marketing', 'Data Science', 'Project Management'],
-      highlight: 'Career-oriented learning paths'
+      highlight: 'Career-oriented learning paths',
+      color: 'from-cyan-500 to-cyan-700'
     }
   ];
   
@@ -134,16 +146,16 @@ const FreeCoursesPage = () => {
     },
     {
       id: 2,
-      title: 'Python for Data Science',
+      title: 'Microsoft for Java Developers',
       provider: 'Microsoft',
       category: 'tech',
-      image: '/images/courses/python.jpg',
+      image: '/images/courses/java.jpg',
       duration: '8 weeks',
       level: 'Intermediate',
       rating: 4.8,
-      description: 'Master Python programming and essential libraries for data analysis and visualization.',
-      link: 'https://docs.microsoft.com/en-us/learn/paths/python-data-science/',
-      tags: ['Python', 'Data Science', 'Analytics']
+      description: 'Learn how to develop Java applications and services with Microsoft technologies and tools.',
+      link: 'https://learn.microsoft.com/en-gb/java/',
+      tags: ['Java', 'Azure', 'OpenJDK']
     },
     {
       id: 3,
@@ -207,7 +219,7 @@ const FreeCoursesPage = () => {
       level: 'Beginner',
       rating: 4.5,
       description: 'Learn the core concepts of digital marketing, including SEO, social media, and content strategy.',
-      link: 'https://www.coursera.org/learn/digital-marketing',
+      link: 'https://www.coursera.org/specializations/digital-marketing',
       tags: ['Marketing', 'SEO', 'Social Media']
     },
     {
@@ -222,6 +234,19 @@ const FreeCoursesPage = () => {
       description: 'Develop emotional intelligence skills to enhance workplace relationships and leadership effectiveness.',
       link: 'https://www.linkedin.com/learning',
       tags: ['EQ', 'Leadership', 'Self-Awareness']
+    },
+    {
+      id: 9,
+      title: 'Machine Learning Specialization',
+      provider: 'Stanford & DeepLearning.AI',
+      category: 'tech',
+      image: '/images/courses/ml.jpg',
+      duration: '2 months',
+      level: 'Beginner',
+      rating: 4.9,
+      description: 'Master fundamental AI concepts and develop practical machine learning skills in this 3-course program by Andrew Ng.',
+      link: 'https://www.coursera.org/specializations/machine-learning-introduction',
+      tags: ['Machine Learning', 'AI', 'Python', 'TensorFlow']
     }
   ];
   
@@ -248,6 +273,27 @@ const FreeCoursesPage = () => {
           .tag-animate:hover {
             transform: translateY(-3px);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          }
+          
+          .platform-header {
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+          }
+          
+          @keyframes gradientAnimation {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
+          
+          .text-stroke {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
           }
         `}
         </style>
@@ -291,10 +337,10 @@ const FreeCoursesPage = () => {
           {selectedTab === 'courses' ? (
             <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
               {/* Decorative header with pattern */}
-              <div className="h-24 bg-gradient-to-r from-primary-500 to-indigo-600 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20" style={{ 
-                  backgroundImage: "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"
-                }}></div>
+              <div className="h-24 bg-gradient-to-r from-primary-500 to-indigo-600 relative overflow-hidden platform-header">
+                <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                  <h2 className="text-7xl font-extrabold text-white text-stroke uppercase tracking-wider">Free Courses</h2>
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center p-6">
                   <h2 className="text-2xl font-bold text-white">Upskill with hand-picked free resources</h2>
                   <div className="bg-white rounded-full p-2">
@@ -344,66 +390,45 @@ const FreeCoursesPage = () => {
                         key={course.id} 
                         className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col bg-white hover-glow"
                       >
-                        <div className="h-48 overflow-hidden relative bg-gradient-to-r from-gray-100 to-gray-200">
-                          <img 
-                            src={course.image} 
-                            alt={course.title} 
-                            className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110" 
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.style.display = 'none';
-                              e.target.parentNode.classList.add('flex', 'items-center', 'justify-center');
-                              const courseCategory = course.category;
-                              let gradientColors;
-                              switch(courseCategory) {
-                                case 'tech':
-                                  gradientColors = 'from-blue-50 to-indigo-100';
-                                  break;
-                                case 'design':
-                                  gradientColors = 'from-purple-50 to-pink-100';
-                                  break;
-                                case 'business':
-                                  gradientColors = 'from-green-50 to-emerald-100';
-                                  break;
-                                case 'soft':
-                                  gradientColors = 'from-orange-50 to-amber-100';
-                                  break;
-                                case 'career':
-                                  gradientColors = 'from-red-50 to-rose-100';
-                                  break;
-                                default:
-                                  gradientColors = 'from-gray-50 to-slate-100';
-                              }
-                              e.target.parentNode.classList.remove('bg-gradient-to-r', 'from-gray-100', 'to-gray-200');
-                              e.target.parentNode.classList.add('bg-gradient-to-r', ...gradientColors.split(' '));
-                              
-                              // Add an icon based on the category
-                              const iconDiv = document.createElement('div');
-                              iconDiv.className = 'text-4xl text-gray-400 font-light';
-                              let iconContent;
-                              switch(courseCategory) {
-                                case 'tech':
-                                  iconContent = '💻';
-                                  break;
-                                case 'design':
-                                  iconContent = '🎨';
-                                  break;
-                                case 'business':
-                                  iconContent = '📊';
-                                  break;
-                                case 'soft':
-                                  iconContent = '🗣️';
-                                  break;
-                                case 'career':
-                                  iconContent = '📈';
-                                  break;
-                                default:
-                                  iconContent = '📚';
-                              }
-                              iconDiv.textContent = iconContent;
-                              e.target.parentNode.appendChild(iconDiv);
-                            }}
-                          />
+                        <div className="h-48 overflow-hidden relative">
+                          {/* Replace image with stylized course title and provider logo */}
+                          <div className={`absolute inset-0 flex items-center justify-center bg-gradient-to-r 
+                            ${course.category === 'tech' ? 'from-blue-500 to-indigo-600' : 
+                             course.category === 'design' ? 'from-purple-500 to-pink-600' :
+                             course.category === 'business' ? 'from-green-500 to-emerald-600' :
+                             course.category === 'soft' ? 'from-orange-500 to-amber-600' :
+                             course.category === 'career' ? 'from-red-500 to-rose-600' :
+                             'from-gray-500 to-slate-600'} platform-header`}>
+                            
+                            {/* Large stylized course name as background */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                              <h2 className="text-4xl font-extrabold text-white text-stroke uppercase tracking-wider text-center px-4">{course.title}</h2>
+                            </div>
+                            
+                            {/* Provider logo or icon */}
+                            <div className="w-20 h-20 bg-white rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center border-4 border-white shadow-lg z-10">
+                              {course.id === 9 ? (
+                                <img src="https://logo.clearbit.com/coursera.org" alt="Coursera" className="w-12 h-12 object-contain" />
+                              ) : course.provider === 'Google' ? (
+                                <img src="https://logo.clearbit.com/google.com" alt="Google" className="w-12 h-12 object-contain" />
+                              ) : course.provider === 'Microsoft' ? (
+                                <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" className="w-12 h-12 object-contain" />
+                              ) : course.provider === 'Coursera' ? (
+                                <img src="https://logo.clearbit.com/coursera.org" alt="Coursera" className="w-12 h-12 object-contain" />
+                              ) : course.provider === 'FutureLift' ? (
+                                <div className="text-2xl font-bold text-primary-600">FL</div>
+                              ) : course.provider === 'LinkedIn Learning' ? (
+                                <img src="https://logo.clearbit.com/linkedin.com" alt="LinkedIn" className="w-12 h-12 object-contain" />
+                              ) : course.provider === 'AWS' ? (
+                                <img src="https://logo.clearbit.com/aws.amazon.com" alt="AWS" className="w-12 h-12 object-contain" />
+                              ) : (
+                                <div className="text-2xl font-bold text-primary-600">
+                                  {course.provider.charAt(0)}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                             <div className="p-4 w-full">
                               <span className="bg-white text-primary-800 text-xs px-2 py-1 rounded-full font-medium">
@@ -452,7 +477,13 @@ const FreeCoursesPage = () => {
                               href={course.link} 
                               target={course.link.startsWith('http') ? '_blank' : '_self'}
                               rel={course.link.startsWith('http') ? 'noopener noreferrer' : ''}
-                              className="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:shadow-md"
+                              className={`block w-full text-center text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:shadow-md bg-gradient-to-r 
+                                ${course.category === 'tech' ? 'from-blue-500 to-indigo-600' : 
+                                 course.category === 'design' ? 'from-purple-500 to-pink-600' :
+                                 course.category === 'business' ? 'from-green-500 to-emerald-600' :
+                                 course.category === 'soft' ? 'from-orange-500 to-amber-600' :
+                                 course.category === 'career' ? 'from-red-500 to-rose-600' :
+                                 'from-primary-500 to-primary-700'}`}
                             >
                               Enroll Now
                             </a>
@@ -518,20 +549,26 @@ const FreeCoursesPage = () => {
                       key={platform.id} 
                       className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02] flex flex-col bg-white hover-glow"
                     >
-                      <div className="p-5 border-b relative h-24 flex items-center justify-center overflow-hidden" style={{
-                        backgroundImage: `url('${platformPatterns[platform.name.toLowerCase().replace(/\s+/g, '-')] || platformPatterns['coursera']}')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundColor: '#f8fafc'
-                      }}>
-                        <div className="w-16 h-16 bg-white rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center border shadow-md z-10 transition-transform duration-300 hover:scale-110">
-                          {platformLogos[platform.name] || (
-                            <div className="text-xl font-bold text-primary-600">
+                      <div className={`platform-header bg-gradient-to-r ${platform.color} relative h-32 flex items-center justify-center overflow-hidden`}>
+                        {/* Large stylized platform name as background */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                          <h2 className="text-6xl font-extrabold text-white text-stroke uppercase tracking-wider">{platform.name}</h2>
+                        </div>
+                        
+                        {/* Centered large logo */}
+                        <div className="w-24 h-24 bg-white rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center border-4 border-white shadow-lg z-10 transition-transform duration-300 hover:scale-110">
+                          {platform.name === 'Coursera' ? (
+                            <img src="https://logo.clearbit.com/coursera.org" alt="Coursera" className="w-16 h-16 object-contain" />
+                          ) : platformLogos[platform.name] ? (
+                            <div className="w-16 h-16 flex items-center justify-center">
+                              {platformLogos[platform.name]}
+                            </div>
+                          ) : (
+                            <div className="text-3xl font-bold text-primary-600">
                               {platform.name.charAt(0)}
                             </div>
                           )}
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/80 to-transparent h-12"></div>
                       </div>
                       <div className="p-5 pt-3 flex flex-col flex-grow">
                         <h3 className="font-semibold text-lg text-center mb-3">{platform.name}</h3>
@@ -562,7 +599,7 @@ const FreeCoursesPage = () => {
                             href={platform.link} 
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:shadow-md"
+                            className={`block w-full text-center bg-gradient-to-r ${platform.color} text-white font-medium py-2 px-4 rounded-md transition-all duration-300 hover:shadow-md`}
                           >
                             Visit Platform
                           </a>

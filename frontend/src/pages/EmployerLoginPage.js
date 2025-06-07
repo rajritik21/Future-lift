@@ -10,7 +10,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 // Configure axios defaults
 axios.defaults.timeout = 10000; // 10 second timeout
 
-const UserLoginPage = () => {
+const EmployerLoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -41,7 +41,7 @@ const UserLoginPage = () => {
     password: '',
     mobile: '',
     dob: '',
-    userType: 'jobseeker' // Always jobseeker for this page
+    userType: 'employer' // Always employer for this page
   });
 
   // Check for signup and message parameters in URL
@@ -57,14 +57,7 @@ const UserLoginPage = () => {
     if (message) {
       setSuccess(message);
     }
-    
-    // If this is the user login page but there's a type=employer parameter,
-    // redirect to the employer-specific login page
-    const userType = params.get('type');
-    if (userType === 'employer') {
-      navigate('/employer/login', { replace: true });
-    }
-  }, [location, navigate]);
+  }, [location]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -239,19 +232,19 @@ const UserLoginPage = () => {
       setError(null);
       const response = await axios.post('/api/auth/login', loginData);
       
-      // Check if the logged in user is a job seeker
-      if (response.data.user.userType !== 'jobseeker') {
-        setError('This login is only for job seekers. Please use the employer login page if you are an employer.');
+      // Check if the logged in user is an employer
+      if (response.data.user.userType !== 'employer') {
+        setError('This login is only for employers. Please use the regular login page if you are a job seeker.');
         return;
       }
       
       login(response.data.token, response.data.user);
       
-      // Redirect to jobseeker dashboard
-      navigate('/dashboard');
+      // Redirect to employer dashboard
+      navigate('/employer/dashboard');
     } catch (err) {
       console.error('Login error:', err);
-        setError(err.response?.data?.errors?.[0]?.msg || 'Invalid credentials');
+      setError(err.response?.data?.errors?.[0]?.msg || 'Invalid credentials');
     }
   };
 
@@ -315,7 +308,7 @@ const UserLoginPage = () => {
         password: signupData.password,
         mobile: signupData.mobile || undefined,  // Only send if provided
         dob: formattedDob, 
-        userType: 'jobseeker' // Always register as jobseeker
+        userType: 'employer' // Always register as employer on this page
       };
       
       console.log('Submitting registration with data:', {
@@ -327,7 +320,7 @@ const UserLoginPage = () => {
       const response = await axios.post('/api/auth/register', userData);
       console.log('Registration response:', response.data);
       
-      setSuccess('Registration successful! You can now login to your account.');
+      setSuccess('Employer registration successful! You can now login to your account.');
       setTimeout(() => {
         setIsSignup(false);
         setSuccess(null);
@@ -364,33 +357,6 @@ const UserLoginPage = () => {
     }
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    const year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    // Return in YYYY-MM-DD format for the input[type="date"] HTML5 element
-    // This is required for the date input to work properly
-    return [year, month, day].join('-');
-  };
-
-  // Calculate max and min dates for DOB input
-  const getMaxDate = () => {
-    const today = new Date();
-    today.setFullYear(today.getFullYear() - 18);
-    return formatDate(today);
-  };
-
-  const getMinDate = () => {
-    const today = new Date();
-    today.setFullYear(today.getFullYear() - 60);
-    return formatDate(today);
-  };
-
   const handleToggleSignup = (e) => {
     e.preventDefault();
     setIsSignup(true);
@@ -407,6 +373,33 @@ const UserLoginPage = () => {
     setSuccess(null);
   };
 
+  // Format date for date input field
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    // Return in YYYY-MM-DD format for the input[type="date"] HTML5 element
+    return [year, month, day].join('-');
+  };
+
+  // Calculate max and min dates for DOB input
+  const getMaxDate = () => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    return formatDate(today);
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 60);
+    return formatDate(today);
+  };
+
   return (
     <div className="user-login-container">
       <div className="user-login-row">
@@ -415,10 +408,10 @@ const UserLoginPage = () => {
             {isSignup ? (
               <form onSubmit={handleSignupSubmit} className="user-login-box">
                 <div className="user-login-header">
-                  <h1>Job Seeker Sign Up</h1>
-                  <div className="user-login-subtitle">Create your account to start your job search</div>
-                  <div className="mt-2 inline-block bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-full font-semibold">
-                    <i className="fas fa-user mr-1"></i> For Job Seekers Only
+                  <h1>Employer Registration</h1>
+                  <div className="user-login-subtitle">Create your employer account</div>
+                  <div className="mt-2 inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1.5 rounded-full font-semibold">
+                    <i className="fas fa-building mr-1"></i> For Employers Only
                   </div>
                 </div>
                 
@@ -434,7 +427,7 @@ const UserLoginPage = () => {
                     type="button" 
                     className="toggle-btn active"
                   >
-                    Sign Up
+                    Register
                   </button>
                 </div>
                 
@@ -509,7 +502,7 @@ const UserLoginPage = () => {
                       <i className="fas fa-info-circle"></i>
                       <span className="date-tooltip-text" style={{ width: "280px", marginLeft: "-140px" }}>
                         Enter your date of birth in MM/DD/YYYY format.<br/>
-                        Job seekers must be between 18 and 60 years old.<br/>
+                        Employers must be between 18 and 60 years old.<br/>
                         This information is used for account verification and security purposes.
                       </span>
                     </div>
@@ -536,26 +529,26 @@ const UserLoginPage = () => {
                   {validationErrors.password && <div className="validation-error">{validationErrors.password}</div>}
                 </div>
                 
-                <input type="submit" value="Sign Up as Job Seeker" />
+                <input type="submit" value="Register as Employer" />
                 
                 <p className="text-muted signup-link">
-                  Already have an account? <a href="#" onClick={handleToggleSignin}>Sign In</a>
+                  Already have an employer account? <a href="#" onClick={handleToggleSignin}>Sign In</a>
                 </p>
                 
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-600 mb-2">Are you an employer?</p>
-                  <Link to="/employer/login" className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm px-4 py-2 rounded-md font-semibold transition-colors duration-200">
-                    <i className="fas fa-building mr-1"></i> Employer Login/Register
+                  <p className="text-sm text-gray-600 mb-2">Looking for a job?</p>
+                  <Link to="/login" className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm px-4 py-2 rounded-md font-semibold transition-colors duration-200">
+                    <i className="fas fa-user mr-1"></i> Job Seeker Login/Register
                   </Link>
                 </div>
               </form>
             ) : (
               <form onSubmit={handleLoginSubmit} className="user-login-box">
                 <div className="user-login-header">
-                  <h1>Job Seeker Sign In</h1>
-                  <div className="user-login-subtitle">Welcome back! Please sign in to continue your job search</div>
-                  <div className="mt-2 inline-block bg-green-100 text-green-800 text-xs px-3 py-1.5 rounded-full font-semibold">
-                    <i className="fas fa-user mr-1"></i> For Job Seekers Only
+                  <h1>Employer Sign In</h1>
+                  <div className="user-login-subtitle">Welcome back! Please sign in to your employer account</div>
+                  <div className="mt-2 inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1.5 rounded-full font-semibold">
+                    <i className="fas fa-building mr-1"></i> For Employers Only
                   </div>
                 </div>
                 
@@ -571,59 +564,59 @@ const UserLoginPage = () => {
                     className="toggle-btn" 
                     onClick={handleToggleSignup}
                   >
-                    Sign Up
+                    Register
                   </button>
                 </div>
                 
                 {error && <div className="user-login-error">{error}</div>}
                 {success && <div className="user-login-success">{success}</div>}
                 
-                    <div className="input-group">
-                      <span className="input-icon">
-                        <i className="fas fa-envelope"></i>
-                      </span>
-                      <input 
-                        type="text" 
-                        name="email" 
-                        placeholder="Email" 
-                        value={loginData.email}
-                        onChange={handleLoginChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="form-group">
-                      <div className="input-group">
-                        <span className="input-icon">
-                          <i className="fas fa-lock"></i>
-                        </span>
-                        <input 
-                          type={showPassword ? "text" : "password"}
-                          name="password" 
-                          placeholder="Password" 
-                          value={loginData.password}
-                          onChange={handleLoginChange}
-                          required
-                        />
-                        <span className="password-toggle" onClick={togglePasswordVisibility}>
-                          <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-                        </span>
-                      </div>
-                      <div className="forgot-password text-center mt-2">
-                        <Link to="/forgot-password">Forgot your password?</Link>
-                      </div>
-                    </div>
-                    
-                <input type="submit" value="Sign In as Job Seeker" />
+                <div className="input-group">
+                  <span className="input-icon">
+                    <i className="fas fa-envelope"></i>
+                  </span>
+                  <input 
+                    type="text" 
+                    name="email" 
+                    placeholder="Email" 
+                    value={loginData.email}
+                    onChange={handleLoginChange}
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <div className="input-group">
+                    <span className="input-icon">
+                      <i className="fas fa-lock"></i>
+                    </span>
+                    <input 
+                      type={showPassword ? "text" : "password"}
+                      name="password" 
+                      placeholder="Password" 
+                      value={loginData.password}
+                      onChange={handleLoginChange}
+                      required
+                    />
+                    <span className="password-toggle" onClick={togglePasswordVisibility}>
+                      <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                    </span>
+                  </div>
+                  <div className="forgot-password text-center mt-2">
+                    <Link to="/forgot-password">Forgot your password?</Link>
+                  </div>
+                </div>
+                
+                <input type="submit" value="Sign In as Employer" />
                 
                 <p className="text-muted signup-link">
-                  Don't have an account? <a href="#" onClick={handleToggleSignup}>Sign Up</a>
+                  Don't have an employer account? <a href="#" onClick={handleToggleSignup}>Register</a>
                 </p>
                 
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-600 mb-2">Are you an employer?</p>
-                  <Link to="/employer/login" className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm px-4 py-2 rounded-md font-semibold transition-colors duration-200">
-                    <i className="fas fa-building mr-1"></i> Employer Login/Register
+                  <p className="text-sm text-gray-600 mb-2">Looking for a job?</p>
+                  <Link to="/login" className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm px-4 py-2 rounded-md font-semibold transition-colors duration-200">
+                    <i className="fas fa-user mr-1"></i> Job Seeker Login/Register
                   </Link>
                 </div>
               </form>
@@ -635,4 +628,4 @@ const UserLoginPage = () => {
   );
 };
 
-export default UserLoginPage; 
+export default EmployerLoginPage; 
